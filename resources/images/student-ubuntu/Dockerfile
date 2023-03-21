@@ -36,8 +36,22 @@ RUN mkdir /root/.ssh
 
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+## NGINX
+
+VOLUME ["/data", "/etc/nginx/site-enabled", "/var/log/nginx"] 
+
+EXPOSE 80
+
+
+## run ssh connection and nginx with startup.sh
+RUN mkdir /root/workdir
+WORKDIR /root/workdir
+COPY . /root/workdir
+
+RUN chmod +x /root/workdir/startup.sh
+CMD ["./startup.sh"]
 
 
 # tags
 ## 0.0: access ssh-only version
+## 1.0: access ssh and nginx version

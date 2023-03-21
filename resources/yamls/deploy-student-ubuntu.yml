@@ -13,8 +13,10 @@ metadata:
 spec:
   containers:
     - name: student-ubuntu
-      image: student-ubuntu:0.0
+      image: student-ubuntu:1.0
       ports:
+        - name: nginx-port
+          containerPort: 80
         - name: ssh-port
           containerPort: 22
 
@@ -26,6 +28,9 @@ metadata:
   namespace: test
 spec:
   ports:
+    - name: http
+      port: 81
+      targetPort: nginx-port
     - name: ssh
       port: 22
       targetPort: ssh-port
