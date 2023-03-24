@@ -15,10 +15,12 @@ echo "root:${SSH_PASSWORD}" | chpasswd
 
 mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
-echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /usr/share/nginx/html/index.html
 
 # run foreground and daemon
-wssh --fbidhttp=False &
+# # wssh --fbidhttp=False &
+python3 ./webssh/run.py &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
+
+
 
