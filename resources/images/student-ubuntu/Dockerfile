@@ -15,18 +15,20 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get autoclean 
+RUN apt-get dist-upgrade
 
 ## SSH
 
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3 python3-pip
 # 컨테이너 이미지 파일의 크기를 줄이기 위해 apt 수행 중 생성된 임시 파일들을 삭제해준다.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN mkdir /var/run/sshd
 
 
+
 # ssh 설정 변경
-ENV SSH_PASSWORD=***
+ENV SSH_PASSWORD=qwer123!
 
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -42,12 +44,19 @@ VOLUME ["/data", "/etc/nginx/site-enabled", "/var/log/nginx"]
 
 EXPOSE 80
 
-
-## run ssh connection and nginx with startup.sh
 RUN mkdir /root/workdir
 WORKDIR /root/workdir
 COPY . /root/workdir
 
+
+## WebSSh ( with Python3 )
+
+RUN pip3 install -r ./requirements.txt
+EXPOSE 8888
+# RUN ufw allow 8888 # firewall?
+
+
+## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
 CMD ["./startup.sh"]
 
@@ -55,3 +64,4 @@ CMD ["./startup.sh"]
 # tags
 ## 0.0: access ssh-only version
 ## 1.0: access ssh and nginx version
+## 2.0: access ssh/nginx + webssh applied version

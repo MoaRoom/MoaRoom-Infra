@@ -18,5 +18,7 @@ echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /usr/share/nginx/html/index.html
 
 # run foreground and daemon
-/usr/sbin/sshd
+wssh --fbidhttp=False &
+/usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
+
