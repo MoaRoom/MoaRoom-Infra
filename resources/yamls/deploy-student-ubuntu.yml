@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: student-ubuntu
+  namespace: test
+  labels:
+    app: test-label
+spec:
+  containers:
+    - name: student-ubuntu
+      image: student-ubuntu:1.0
+      ports:
+        - name: nginx-port
+          containerPort: 80
+        - name: ssh-port
+          containerPort: 22
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-ubuntu-svc
+  namespace: test
+spec:
+  ports:
+    - name: http
+      port: 81
+      targetPort: nginx-port
+    - name: ssh
+      port: 22
+      targetPort: ssh-port
+  selector:
+    app: test-label
+  type: LoadBalancer
