@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: test
+  name: slave-ns
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: student-ubuntu
-  namespace: test
+  name: slave-ubuntu
+  namespace: slave-ns
   labels:
-    app: test-label
+    app: slave-label
 spec:
   containers:
-    - name: student-ubuntu
-      image: student-ubuntu:2.0
+    - name: slave-ubuntu
+      image: slave-ubuntu:2.0
       ports:
         - name: nginx-port
           containerPort: 80
@@ -26,8 +26,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: student-ubuntu-svc
-  namespace: test
+  name: slave-ubuntu-svc
+  namespace: slave-ns
 spec:
   ports:
     - name: http
@@ -40,5 +40,5 @@ spec:
       port: 8888
       targetPort: webssh-port
   selector:
-    app: test-label
+    app: slave-label
   type: LoadBalancer
