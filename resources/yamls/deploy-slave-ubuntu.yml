@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
     - name: slave-ubuntu
-      image: slave-ubuntu:2.0
+      image: slave-ubuntu:3.0
       ports:
         - name: nginx-port
           containerPort: 80
@@ -21,6 +21,8 @@ spec:
           containerPort: 22
         - name: webssh-port
           containerPort: 8888
+        - name: server-port
+          containerPort: 8001
 
 ---
 apiVersion: v1
@@ -39,6 +41,9 @@ spec:
     - name: webssh
       port: 8888
       targetPort: webssh-port
+    - name: server
+      port: 8001
+      targetPort: server-port
   selector:
     app: slave-label
   type: LoadBalancer
