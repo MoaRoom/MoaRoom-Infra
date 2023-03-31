@@ -34,7 +34,10 @@ ENV SSH_PASSWORD=qwer123!
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 # 응용 프로그램이 password 파일을 읽어 오는 대신 PAM이 직접 인증을 수행 하도록 하는 PAM 인증을 활성화
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/# UsePAM yes/g' /etc/ssh/sshd_config
+# 로그인 후 motd 나타나게
+RUN sed -ri 's/PrintMotd no/PrintMotd yes/g' /etc/ssh/sshd_config
+
 RUN mkdir /root/.ssh
 
 EXPOSE 22
