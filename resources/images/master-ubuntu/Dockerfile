@@ -34,7 +34,10 @@ ENV SSH_PASSWORD=qwer123!
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 # 응용 프로그램이 password 파일을 읽어 오는 대신 PAM이 직접 인증을 수행 하도록 하는 PAM 인증을 활성화
-RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/# UsePAM yes/g' /etc/ssh/sshd_config
+# 로그인 후 motd 나타나게
+RUN sed -ri 's/PrintMotd no/PrintMotd yes/g' /etc/ssh/sshd_config
+
 RUN mkdir /root/.ssh
 
 EXPOSE 22
@@ -53,12 +56,7 @@ COPY . /root/workdir
 ## WebSSh ( with Python3 )
 RUN pip3 install -r ./webssh/requirements.txt 
 
-EXPOSE 8888
-
-## API server
-RUN pip3 install -r ./server/requirements.txt 
-
-EXPOSE 8001
+EXPOSE 8889
 
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
@@ -68,7 +66,5 @@ CMD ["./startup.sh"]
 
 
 # tags
-## 0.0: access ssh-only version
-## 1.0: access ssh and nginx version
-## 2.0: access ssh/nginx + webssh applied version
-## 3.0: access ssh/nginx + webssh +  api applied version
+## 1.0: access ssh/nginx + webssh version
+### 1.1: + Banner

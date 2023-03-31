@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
     - name: slave-ubuntu
-      image: slave-ubuntu:3.0
+      image: slave-ubuntu:3.1
       ports:
         - name: nginx-port
           containerPort: 80

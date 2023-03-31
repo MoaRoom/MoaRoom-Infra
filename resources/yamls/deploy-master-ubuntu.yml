@@ -3,36 +3,27 @@ kind: Namespace
 metadata:
   name: master-ns
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  labels:
-    app: master-label
   name: master-ubuntu
   namespace: master-ns
+  labels:
+    app: master-label
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: master-label
-  template:
-    metadata:
-      labels:
-        app: master-label
-    spec:
-      containers:
-        - name: master-ubuntu
-          image: master-ubuntu:0.0
-          resources: {}
-          ports:
-            - name: nginx-port
-              containerPort: 80
-            - name: ssh-port
-              containerPort: 22
-            - name: webssh-port
-              containerPort: 8888
-            - name: server-port
-              containerPort: 8001
+  containers:
+    - name: master-ubuntu
+      image: master-ubuntu:1.1
+      ports:
+        - name: nginx-port
+          containerPort: 80
+        - name: ssh-port
+          containerPort: 22
+        - name: webssh-port
+          containerPort: 8889
+        - name: server-port
+          containerPort: 8001
+      resources: {}
 ---
 apiVersion: v1
 kind: Service
@@ -48,7 +39,7 @@ spec:
       port: 22
       targetPort: ssh-port
     - name: webssh
-      port: 8888
+      port: 8889
       targetPort: webssh-port
     - name: server
       port: 8001
