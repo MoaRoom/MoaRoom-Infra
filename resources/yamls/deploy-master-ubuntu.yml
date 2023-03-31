@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: master-ns
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: master-ubuntu
+  namespace: master-ns
+  labels:
+    app: master-label
+spec:
+  containers:
+    - name: master-ubuntu
+      image: master-ubuntu:1.1
+      ports:
+        - name: nginx-port
+          containerPort: 80
+        - name: ssh-port
+          containerPort: 22
+        - name: webssh-port
+          containerPort: 8889
+        - name: server-port
+          containerPort: 8001
+      resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: master-ubuntu-svc
+  namespace: master-ns
+spec:
+  ports:
+    - name: http
+      port: 81
+      targetPort: nginx-port
+    - name: ssh
+      port: 22
+      targetPort: ssh-port
+    - name: webssh
+      port: 8889
+      targetPort: webssh-port
+    - name: server
+      port: 8001
+      targetPort: server-port
+  selector:
+    app: master-label
+  type: LoadBalancer
+---
+
