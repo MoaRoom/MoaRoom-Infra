@@ -16,9 +16,18 @@ echo "root:${SSH_PASSWORD}" | chpasswd
 mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 
+## Banner
+echo "" >> /etc/ssh/sshd_config
+echo "# Banner path" >> /etc/ssh/sshd_config
+echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config
+cp /root/workdir/issue.net /etc/issue.net
+cp /root/workdir/issue.net /etc/issue
+cp /root/workdir/issue.net /etc/motd
+
 # run foreground and daemon
 # # wssh --fbidhttp=False &
 python3 ./webssh/run.py &
+cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=0.0.0.0 --port=8001 &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
 
