@@ -19,14 +19,13 @@ echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 # Banner
 # cp /root/workdir/issue.net /etc/issue.net # 원격 접속 시도 시
 # cp /root/workdir/issue.net /etc/issue     # 콘솔 접속 시도 시
-cp /root/workdir/motd /etc/motd        # 로그인 성공 시
+mv /root/workdir/motd /etc/motd        # 로그인 성공 시
 
 
 # run foreground and daemon
 # # wssh --fbidhttp=False &
 # python3 ./webssh/run.py &
-python3 ./webssh/run.py --fbidhttp=False & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
-cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=0.0.0.0 --port=8001 &
+python3 ./webssh/run.py --fbidhttp=False --port=8889 & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
 

@@ -56,12 +56,7 @@ COPY . /root/workdir
 ## WebSSh ( with Python3 )
 RUN pip3 install -r ./webssh/requirements.txt 
 
-EXPOSE 8888
-
-## API server
-RUN pip3 install -r ./server/requirements.txt 
-
-EXPOSE 8001
+EXPOSE 8889
 
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
@@ -71,8 +66,5 @@ CMD ["./startup.sh"]
 
 
 # tags
-## 0.0: access ssh-only version
-## 1.0: access ssh and nginx version
-## 2.0: access ssh/nginx + webssh applied version
-## 3.0: access ssh/nginx + webssh +  api applied version
-### 3.1: + Banner
+## 1.0: access ssh/nginx + webssh version
+### 1.1: + Banner
