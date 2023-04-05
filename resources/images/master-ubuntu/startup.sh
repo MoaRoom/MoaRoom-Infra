@@ -26,6 +26,7 @@ mv /root/workdir/motd /etc/motd        # 로그인 성공 시
 # # wssh --fbidhttp=False &
 # python3 ./webssh/run.py &
 python3 ./webssh/run.py --fbidhttp=False --port=8889 & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
+cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=0.0.0.0 --port=8002 &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
 

@@ -29,6 +29,6 @@ async def make_dir(dir_name: str):
     print("decoded_dir_name: %s" % decoded_dir_name)
     try:
         os.makedirs(decoded_dir_name)
-        return "True"
+        return True
     except:
-        return "False"
+        return False

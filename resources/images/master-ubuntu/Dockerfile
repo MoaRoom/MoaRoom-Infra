@@ -20,7 +20,7 @@ RUN apt-get dist-upgrade
 ## SSH
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu vivid main restricted universe" >> /etc/apt/sources.list # libffi-dev
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc 
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc cron
 # 컨테이너 이미지 파일의 크기를 줄이기 위해 apt 수행 중 생성된 임시 파일들을 삭제해준다.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -58,13 +58,20 @@ RUN pip3 install -r ./webssh/requirements.txt
 
 EXPOSE 8889
 
+## API server
+RUN pip3 install -r ./server/requirements.txt 
+
+EXPOSE 8002
+
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
 RUN chmod +x /root/workdir/webssh/run.py
 RUN chmod +x /root/workdir/server/main.py
+RUN chmod +x /root/workdir/server/* # for crontab
 CMD ["./startup.sh"]
 
 
 # tags
 ## 1.0: access ssh/nginx + webssh version
 ### 1.1: + Banner
+## 2.0: + master api
