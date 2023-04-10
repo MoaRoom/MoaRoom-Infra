@@ -26,11 +26,6 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN mkdir /var/run/sshd
 
-
-
-# ssh 설정 변경
-ENV SSH_PASSWORD=qwer123!
-
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 # 응용 프로그램이 password 파일을 읽어 오는 대신 PAM이 직접 인증을 수행 하도록 하는 PAM 인증을 활성화
@@ -51,7 +46,6 @@ EXPOSE 80
 RUN mkdir /root/workdir
 WORKDIR /root/workdir
 COPY . /root/workdir
-
 
 ## WebSSh ( with Python3 )
 RUN pip3 install -r ./webssh/requirements.txt 
@@ -75,3 +69,4 @@ CMD ["./startup.sh"]
 ## 1.0: access ssh/nginx + webssh version
 ### 1.1: + Banner
 ## 2.0: + master api
+### 2.1: + env variables applied

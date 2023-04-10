@@ -1,4 +1,14 @@
 #!/bin/bash
+# set environment variables
+i=1
+while read line || [ -n "$line" ] ; do
+  echo "export $line > /dev/null 2>&1" >> /etc/profile
+  ((i+=1))
+done < ./.env
+source /etc/profile > /dev/null 2>&1
+
+# no welcome message
+chmod -x /etc/update-motd.d/*
 
 # # ssl configuration
 # mkdir -p /etc/nginx/ssl
@@ -23,12 +33,7 @@ mv /root/workdir/motd /etc/motd        # 로그인 성공 시
 
 
 # run foreground and daemon
-# # wssh --fbidhttp=False &
-# python3 ./webssh/run.py &
-python3 ./webssh/run.py --fbidhttp=False --port=8889 & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
-cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=0.0.0.0 --port=8002 &
+python3 ./webssh/run.py --fbidhttp=False --port=$((${WEBSSH_PORT})) & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
+cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=${SERVER_HOST} --port=$((${SERVER_PORT})) &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
-
-
-
