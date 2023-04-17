@@ -37,20 +37,20 @@ def schedule_cronjob(dt, assignment_id):
 
 
 def create_directories(assignment_id, data_users_assigned):
-    dir_path_slave = Urls.dir_path_slave
-    dir_path_master = Urls.dir_path_master
+    dir_path_student = Urls.dir_path_student
+    dir_path_professor = Urls.dir_path_professor
     for user in data_users_assigned:
-        # mkdir in slave
-        encoded_dir_path_slave = base64.b64encode((
-            dir_path_slave+"/"+str(assignment_id)).encode('ascii')).decode('ascii')  # base64 encode
-        # slave_base_url이 slave마다 다른 점 어떻게 할지
-        url = Urls.slave_base_url+"/mkdir/"+encoded_dir_path_slave
+        # mkdir in student
+        encoded_dir_path_student = base64.b64encode((
+            dir_path_student+"/"+str(assignment_id)).encode('ascii')).decode('ascii')  # base64 encode
+        # student_base_url이 student마다 다른 점 어떻게 할지
+        url = Urls.student_base_url+"/mkdir/"+encoded_dir_path_student
         result = requests.post(url).text
         if result == False:
             print("Error in mkdir, uid:"+user.id)
 
-        # mkdir in master
-        os.makedirs("%s/%s/%s" % (dir_path_master, assignment_id, user.id))
+        # mkdir in professor
+        os.makedirs("%s/%s/%s" % (dir_path_professor, assignment_id, user.id))
 
 
 def create_assignment():

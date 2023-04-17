@@ -11,8 +11,8 @@ data_lecture = [Dto.LectureModel(
     lecture_id=2110000001, title="프입", class_num=1, professor_id=9123)]
 data_assignments = [Dto.AssignmentModel(assignment_id=1, lecture_id=2110000001, title="과제이름", start_date=datetime.datetime(
     2023, 4, 4, 10, 00, 00), due_date=datetime.datetime(2023, 4, 11, 23, 59, 59), description="첫번째 과제입니다.")]
-data_masters = [Dto.UsersModel(id=0, user_id="ryann0", password="qwer123!", name="금나0", user_num=9123, role="교수"),
-                ]
+data_professors = [Dto.UsersModel(id=0, user_id="ryann0", password="qwer123!", name="금나0", user_num=9123, role="교수"),
+                   ]
 data_steps = [Dto.StepModel(assignment_id=1, lecture_id=2110000001, user_id=1, step="진행중"),
               Dto.StepModel(assignment_id=1, lecture_id=2110000001,
                             user_id=2, step="채점중"),
@@ -24,11 +24,12 @@ data_users_assigned = [Dto.UsersModel(id=1, user_id="ryann1", password="qwer123!
                        Dto.UsersModel(id=3, user_id="ryann3", password="qwer123!",
                                       name="금나3", user_num=1914393, role="학생"), ]
 
-def yaml_to_json(id, isMaster):
-    if isMaster:
-        role = "master"
+
+def yaml_to_json(id, isProfessor):
+    if isProfessor:
+        role = "professor"
     else:
-        role = "slave"
+        role = "student"
     f = open("/Users/nkeum/github/MoaRoom-Infra-local/resources/images/control-ubuntu/server/res/deploy-%s-ubuntu.yml" % role, 'r')
     # apply envvar
     file = f.read().replace("{{ ID }}", str(id))
@@ -47,10 +48,10 @@ def yaml_to_json(id, isMaster):
     return len(contents)-1
 
 
-def create_master_res(master_info: Dto.UsersModel):
+def create_professor_res(professor_info: Dto.UsersModel):
     # id = 0, user_id = "ryann0", password = "qwer123!", name = "금나0", user_num = 9123, role = "교수"
-    id = master_info.id
-    # if (master_info.role != "교수"):
+    id = professor_info.id
+    # if (professor_info.role != "교수"):
     #     return "Professor authentication failed. Please check the role and try again."
 
     json_num = yaml_to_json(id, True)
@@ -59,12 +60,12 @@ def create_master_res(master_info: Dto.UsersModel):
         json_str = json.load(open(
             "/Users/nkeum/github/MoaRoom-Infra-local/resources/images/control-ubuntu/server/res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
-            url = Urls.kube_base_url+"/api/v1/namespaces/master-ns/pods"
+            url = Urls.kube_base_url+"/api/v1/namespaces/professor-ns/pods"
         elif json_str['kind'] == "Service":
-            url = Urls.kube_base_url+"/api/v1/namespaces/master-ns/services"
+            url = Urls.kube_base_url+"/api/v1/namespaces/professor-ns/services"
         result = requests.post(url, json=json_str).text
         if result == False:
-            print("Error in creating master, id:"+id)
+            print("Error in creating professor, id:"+id)
         else:
             print("success")  # TODO need api-parser!!
 
@@ -84,14 +85,14 @@ def create_lecture(lecture_info: Dto.LectureModel, data_users_assigned):
             json_str = json.load(open(
                 "/Users/nkeum/github/MoaRoom-Infra-local/resources/images/control-ubuntu/server/res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
-                url = Urls.kube_base_url+"/api/v1/namespaces/slave-ns/pods"
+                url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/pods"
             elif json_str['kind'] == "Service":
-                url = Urls.kube_base_url+"/api/v1/namespaces/slave-ns/services"
+                url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/services"
             result = requests.post(url, json=json_str).text
             if result == False:
-                print("Error in creating slave, id:"+id)
+                print("Error in creating student, id:"+id)
             else:
                 print("success")  # TODO need api-parser!!
 
-# create_master_res(data_masters[0])
+# create_professor_res(data_professors[0])
 # create_lecture(data_lecture[0], data_users_assigned)
