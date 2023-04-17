@@ -18,7 +18,7 @@ def yaml_to_json(id, isMaster):
         role = "master"
     else:
         role = "slave"
-    f = open("./res/deploy-%s-ubuntu.yml" % role, 'r')
+    f = open("./res/remote-deploy-%s.yml" % role, 'r')
     # apply env var
     file = f.read().replace("{{ ID }}", str(id))
     contents = file.split("---")

@@ -15,3 +15,4 @@ cd ..
 RES_DIR_PATH=../../res
 cp $RES_DIR_PATH/.env ./.env
 cp $RES_DIR_PATH/*.py ./server/res/
+cp $RES_DIR_PATH/*.yml ./server/res/
