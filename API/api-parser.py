@@ -6,7 +6,7 @@ import res.Dto as Dto
 
 host_dns = "localhost"
 host_port = 8080
-namespace = "slave-ns"
+namespace = "student-ns"
 
 # dir_path = "/Users/nkeum/github/MoaRoom-Infra-local/API/pod-list.json"
 # json_str = open(dir_path, 'r').read()

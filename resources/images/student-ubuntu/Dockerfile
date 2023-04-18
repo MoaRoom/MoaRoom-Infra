@@ -26,10 +26,9 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN mkdir /var/run/sshd
 
-
-
-# ssh 설정 변경
-ENV SSH_PASSWORD=qwer123!
+# Add env
+COPY .env ./
+RUN export $(cat .env | xargs)
 
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config

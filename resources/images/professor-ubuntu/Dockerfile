@@ -68,5 +68,5 @@ CMD ["./startup.sh"]
 # tags
 ## 1.0: access ssh/nginx + webssh version
 ### 1.1: + Banner
-## 2.0: + master api
+## 2.0: + professor api
 ### 2.1: + env variables applied
