@@ -26,5 +26,5 @@ def make_dir(dir_path: str):
 
 
 # print(read_files_from_dir(
-#     "/Users/nkeum/github/MoaRoom-Infra-local/resources/images/slave-ubuntu/server"))
-# make_dir("/Users/nkeum/github/MoaRoom-Infra-local/resources/images/slave-ubuntu/server/testDir")
+#     "/Users/nkeum/github/MoaRoom-Infra-local/resources/images/student-ubuntu/server"))
+# make_dir("/Users/nkeum/github/MoaRoom-Infra-local/resources/images/student-ubuntu/server/testDir")

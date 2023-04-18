@@ -13,12 +13,12 @@ import datetime
 app = FastAPI()
 
 
-def yaml_to_json(id, isMaster):
-    if isMaster:
-        role = "master"
+def yaml_to_json(id, isProfessor):
+    if isProfessor:
+        role = "professor"
     else:
-        role = "slave"
-    f = open("./res/deploy-%s-ubuntu.yml" % role, 'r')
+        role = "student"
+    f = open("./res/remote-deploy-%s.yml" % role, 'r')
     # apply env var
     file = f.read().replace("{{ ID }}", str(id))
     contents = file.split("---")
@@ -35,10 +35,10 @@ def yaml_to_json(id, isMaster):
     return len(contents)-1  # object file num
 
 
-@app.post("/master/{master_info}")
+@app.post("/professor/{professor_info}")
 @validate
-async def create_master_res(master_info: Dto.UsersModel):
-    id = master_info.id
+async def create_professor_res(professor_info: Dto.UsersModel):
+    id = professor_info.id
 
     json_num = yaml_to_json(id, True)
 
@@ -46,12 +46,12 @@ async def create_master_res(master_info: Dto.UsersModel):
         json_str = json.load(open(
             "./res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
-            url = Urls.kube_base_url+"/api/v1/namespaces/master-ns/pods"
+            url = Urls.kube_base_url+"/api/v1/namespaces/professor-ns/pods"
         elif json_str['kind'] == "Service":
-            url = Urls.kube_base_url+"/api/v1/namespaces/master-ns/services"
+            url = Urls.kube_base_url+"/api/v1/namespaces/professor-ns/services"
         result = requests.post(url, json=json_str).text
         if result == False:  # TODO deliver error message
-            print("Error in creating master, id:"+id)
+            print("Error in creating professor, id:"+id)
         else:
             print("success")
 
@@ -71,11 +71,11 @@ async def create_lecture(lecture_info: Dto.LectureModel, data_users_assigned):
             json_str = json.load(open(
                 "./res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
-                url = Urls.kube_base_url+"/api/v1/namespaces/slave-ns/pods"
+                url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/pods"
             elif json_str['kind'] == "Service":
-                url = Urls.kube_base_url+"/api/v1/namespaces/slave-ns/services"
+                url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/services"
             result = requests.post(url, json=json_str).text
             if result == False:  # TODO deliver error message
-                print("Error in creating slave, id:"+id)
+                print("Error in creating student, id:"+id)
             else:
                 print("success")

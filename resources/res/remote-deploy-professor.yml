@@ -1,19 +1,14 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: master-ns
----
-apiVersion: v1
 kind: Pod
 metadata:
-  name: master-ubuntu
-  namespace: master-ns
+  name: professor-{{ ID }}
+  namespace: professor-ns
   labels:
-    app: master-label
+    app: professor-label-{{ ID }}
 spec:
   containers:
-    - name: master-ubuntu
-      image: master-ubuntu:2.0
+    - name: professor-{{ ID }}
+      image: professor-ubuntu:2.1
       ports:
         - name: nginx-port
           containerPort: 80
@@ -28,8 +23,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: master-ubuntu-svc
-  namespace: master-ns
+  name: professor-{{ ID }}-svc
+  namespace: professor-ns
 spec:
   ports:
     - name: http
@@ -45,7 +40,7 @@ spec:
       port: 8002
       targetPort: server-port
   selector:
-    app: master-label
+    app: professor-label-{{ ID }}
   type: LoadBalancer
 ---
 

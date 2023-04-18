@@ -14,8 +14,8 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: master-credential
-  namespace: master-ns
+  name: professor-credential
+  namespace: professor-ns
 type: kubernetes.io/tls
 data:
   tls.crt: READACTED
