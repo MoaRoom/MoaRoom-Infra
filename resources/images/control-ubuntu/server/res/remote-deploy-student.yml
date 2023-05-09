@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: student-{{ ID }}
+  namespace: student-ns
+  labels:
+    app: student-label-{{ ID }}
+spec:
+  containers:
+    - name: student-{{ ID }}
+      image: ryann3/student-ubuntu:3.1
+      ports:
+        - name: nginx-port
+          containerPort: 80
+        - name: ssh-port
+          containerPort: 22
+        - name: webssh-port
+          containerPort: 8888
+        - name: server-port
+          containerPort: 8001
+      resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-{{ ID }}-svc
+  namespace: student-ns
+spec:
+  ports:
+    - name: http
+      port: 81
+      targetPort: nginx-port
+    - name: ssh
+      port: 22
+      targetPort: ssh-port
+    - name: webssh
+      port: { PORT }
+      targetPort: webssh-port
+    - name: server
+      port: 8001
+      targetPort: server-port
+  selector:
+    app: student-label-{{ ID }}
+  type: LoadBalancer
