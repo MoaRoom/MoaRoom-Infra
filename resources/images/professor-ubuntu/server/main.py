@@ -34,7 +34,6 @@ def create_directories(assignment_id, data_users_assigned):
 
 
 @app.post("/assignment/{assignment_info}")
-@validate
 async def create_assignment(assignment_info: Dto.AssignmentModel):
     assignment_id = assignment_info.assignment_id
     json_str = requests.get(Urls.base_url+"?assignment_id="+assignment_id).text

@@ -1,6 +1,6 @@
 import os
 
-kube_url = os.getenv('KUBE_BASE_URL')
+kube_base_url = os.getenv('KUBE_BASE_URL')
 base_url = os.getenv('BASE_URL')  # "http://"  # db server
 student_base_url = os.getenv('STUDENT_BASE_URL')  # "http://localhost:8001"
 # student_base_url = "http://student-ubuntu-svc.student-ns.svc.cluster.local:8001"
