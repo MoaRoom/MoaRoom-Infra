@@ -13,14 +13,14 @@ metadata:
 spec:
   containers:
     - name: professor-ubuntu
-      image: professor-ubuntu:2.1
+      image: ryann3/professor-ubuntu:2.1
       ports:
         - name: nginx-port
           containerPort: 80
         - name: ssh-port
           containerPort: 22
         - name: webssh-port
-          containerPort: 8889
+          containerPort: 8887
         - name: server-port
           containerPort: 8002
       resources: {}
@@ -39,7 +39,7 @@ spec:
       port: 22
       targetPort: ssh-port
     - name: webssh
-      port: 8889
+      port: 8887
       targetPort: webssh-port
     - name: server
       port: 8002

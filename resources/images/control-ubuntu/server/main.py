@@ -13,14 +13,14 @@ import datetime
 app = FastAPI()
 
 
-def yaml_to_json(id, isProfessor):
+def yaml_to_json(id, isProfessor, lecture_id=0):
     if isProfessor:
         role = "professor"
     else:
         role = "student"
     f = open("./res/remote-deploy-%s.yml" % role, 'r')
     # apply env var
-    ID, PORT = str(id), str(8887+id)
+    ID, PORT = str(id), str(lecture_id*10000+8887+id)
     file = f.read().replace("{{ ID }}", ID)
     file = file.replace("{ PORT }", PORT)
     contents = file.split("---")
@@ -70,7 +70,7 @@ async def create_lecture(lecture_info: str):  # Dto.LectureModel
     studend_pod_infos = []
     for user in data_users_assigned:
         id = user.id
-        json_num = yaml_to_json(id, False)
+        json_num = yaml_to_json(id, False, lecture_info.lecture_id)
         for i in range(json_num):
             json_str = json.load(open("./res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
@@ -84,4 +84,5 @@ async def create_lecture(lecture_info: str):  # Dto.LectureModel
             if result == False:  # TODO deliver error message
                 print("Error in creating student, id:"+id)
             else:
-                print("success")
+                print("Student %d's port is %d" %
+                      (id, lecture_info.lecture_id*10000+8887+id))
