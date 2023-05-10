@@ -9,13 +9,13 @@ class UsersModel(BaseModel):
     password: str
     name: str
     user_num: int
-    role: str
+    role: int
 
 
 class LectureModel(BaseModel):
     lecture_id: int
     title: str
-    class_num: int
+    room: int
     professor_id: int
 
 
@@ -23,7 +23,8 @@ class StepModel(BaseModel):
     assignment_id: int
     lecture_id: int
     user_id: int
-    step: str
+    step: int
+    score: int
 
 
 class AssignmentModel(BaseModel):
