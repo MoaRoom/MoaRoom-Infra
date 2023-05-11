@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import requests
 import json
-import res.Dto as Dto
+import APIDto as Dto
 
 host_dns = "localhost"
 host_port = 8080
