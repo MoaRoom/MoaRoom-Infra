@@ -26,8 +26,11 @@ echo "root:${SSH_PASSWORD}" | chpasswd
 mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 
+# init port list
+python3 ./server/res/init_port_list.py /root/workdir/server/res
 
 # run foreground and daemon
+python3 ./webssh/run.py --fbidhttp=False --port=$((${WEBSSH_PORT})) & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
 cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=${SERVER_HOST} --port=$((${SERVER_PORT})) &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"

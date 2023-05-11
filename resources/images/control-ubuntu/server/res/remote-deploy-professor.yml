@@ -34,7 +34,7 @@ spec:
       port: 22
       targetPort: ssh-port
     - name: webssh
-      port: 8887
+      port: { PORT }
       targetPort: webssh-port
     - name: server
       port: 8001
@@ -42,5 +42,3 @@ spec:
   selector:
     app: professor-label-{{ ID }}
   type: LoadBalancer
----
-

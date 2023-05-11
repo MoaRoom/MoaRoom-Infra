@@ -8,8 +8,8 @@ import base64
 app = FastAPI()
 
 
-@app.get("/files/{dir_path}")
-async def read_files_from_dir(dir_path: str):
+@app.get("/files/")
+async def read_files_from_dir(dir_path: str = None):
     # base64 decoded
     decoded_dir_path = base64.b64decode(dir_path).decode('ascii')
     returnDict = {}
@@ -22,8 +22,8 @@ async def read_files_from_dir(dir_path: str):
     return json.dumps(returnDict)
 
 
-@app.post("/mkdir/{dir_name}")
-async def make_dir(dir_name: str):
+@app.post("/mkdir/")
+async def make_dir(dir_name: str = None):
     # base64 decoded
     decoded_dir_name = base64.b64decode(dir_name).decode('ascii')
     print("decoded_dir_name: %s" % decoded_dir_name)

@@ -37,10 +37,14 @@ RUN mkdir /root/.ssh
 
 EXPOSE 22
 
-## API server
-RUN pip3 install -r ./server/requirements.txt 
+RUN mkdir /root/workdir
+WORKDIR /root/workdir
+COPY . /root/workdir
 
-EXPOSE 8002
+## API server
+RUN pip3 install -r ./server/requirements.txt
+
+EXPOSE 8003
 
 ## NGINX
 
@@ -48,9 +52,10 @@ VOLUME ["/data", "/etc/nginx/site-enabled", "/var/log/nginx"]
 
 EXPOSE 80
 
-RUN mkdir /root/workdir
-WORKDIR /root/workdir
-COPY . /root/workdir
+## WebSSh ( with Python3 )
+RUN pip3 install -r ./webssh/requirements.txt 
+
+EXPOSE 8886
 
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
@@ -58,4 +63,7 @@ CMD ["./startup.sh"]
 
 
 # tags
-## 1.0: control server
+## 1.0: local version
+### 1.1: api entity testing version
+### 1.2: port list check version
+## 2.1: k8s version

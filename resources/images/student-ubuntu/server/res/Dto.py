@@ -34,3 +34,9 @@ class AssignmentModel(BaseModel):
     start_date: datetime.datetime
     due_date: datetime.datetime
     description: str
+
+
+class URLModel(BaseModel):
+    id: int
+    lecture_id: int
+    url: str
