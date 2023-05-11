@@ -33,8 +33,8 @@ def create_directories(assignment_id, data_users_assigned):
         os.makedirs("%s/%s/%s" % (dir_path_professor, assignment_id, user.id))
 
 
-@app.post("/assignment/{assignment_info}")
-async def create_assignment(assignment_info: Dto.AssignmentModel):
+@app.post("/assignment/")
+async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
     json_str = requests.get(Urls.base_url+"?assignment_id="+assignment_id).text
     data_users_assigned = list(json.loads(json_str))  # json to list[dict]

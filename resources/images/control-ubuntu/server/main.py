@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import requests
 from fastapi import FastAPI
-from flask_pydantic import validate
 import os
 import json
 import yaml
@@ -19,8 +18,9 @@ def yaml_to_json(id, isProfessor, lecture_id=0):
     else:
         role = "student"
     f = open("./res/remote-deploy-%s.yml" % role, 'r')
-    # apply env var
     ID, PORT = str(id), str(lecture_id*10000+8887+id)
+
+    # apply env var
     file = f.read().replace("{{ ID }}", ID)
     file = file.replace("{ PORT }", PORT)
     contents = file.split("---")
@@ -37,10 +37,9 @@ def yaml_to_json(id, isProfessor, lecture_id=0):
     return len(contents)  # object file num
 
 
-@app.post("/professor/{professor_info}")
-async def create_professor_res(professor_info: str):  # Dto.UsersModel):
-    # pid = professor_info.id
-    pid = 0
+@app.post("/professor/")
+async def create_professor_res(professor_info: Dto.UsersModel = None):
+    pid = professor_info.id
 
     json_num = yaml_to_json(pid, True)
 
@@ -61,8 +60,8 @@ async def create_professor_res(professor_info: str):  # Dto.UsersModel):
             print("success")
 
 
-@app.post("/lecture/{lecture_info}")
-async def create_lecture(lecture_info: str):  # Dto.LectureModel
+@app.post("/lecture/")
+async def create_lecture(lecture_info: Dto.LectureModel = None):  #
     json_str = requests.get(
         Urls.base_url+"?lecture_id="+lecture_info.lecture_id).text
     data_users_assigned = list(json.loads(json_str))  # json to list[dict]
