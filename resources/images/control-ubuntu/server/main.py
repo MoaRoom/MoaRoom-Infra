@@ -11,7 +11,7 @@ import numpy as np
 app = FastAPI()
 
 
-def yaml_to_json(id, isProfessor, lecture_id=0):
+def yaml_to_json(id, isProfessor, lecture_id=-1):
     if isProfessor:
         role = "professor"
     else:
