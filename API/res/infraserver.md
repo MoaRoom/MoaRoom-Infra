@@ -59,10 +59,15 @@ class URLModel(BaseModel):
 - 용도: Professor 생성 시 호출, 컨테이너 할당, url 반환
 - return type: `URLModel`
 
-### 2. `/lecture/{lecture_info : LectureModel}`
+### 2. (deprecated)~~`/lecture/{lecture_info : LectureModel}`~~
 
 - 용도: Lecture 생성 시 호출, Lecture을 수강하는 학생들의 컨테이너 할당, 학생들의 url 반환
 - **특이사항**: `lecture_info.lecture_id`를 통해 lecture를 수강하는 학생의 리스트(list(UsersModel))를 받음
+- return type: `list(URLModel)`
+
+### 3. `/student/{student_info : UsersModel, lecture_id : int}`
+
+- 용도: 학생이 Lecture 수강신청 시 호출, 학생의 컨테이너 할당, 학생의 url 반환(URLModel)
 - return type: `URLModel`
 
 ## ✅ Professor
