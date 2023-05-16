@@ -46,3 +46,5 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
 
     # cron
     schedule_cronjob(due_date, assignment_id)
+    
+    return True
