@@ -71,6 +71,8 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
         else:
             print("Professor %d's port is %d" %
                   (id, PORT))
+            # professor has multiple lectures, lecture_id doesn't matter(-1)
+            return Dto.URLModel(id, -1, Urls.base_url+":%d" % PORT)
 
 
 @app.post("/lecture/")
@@ -101,4 +103,26 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
                     Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT))
                 print("Student %d's port is %d" %
                       (id, PORT))
-        print(student_pod_infos)
+        return student_pod_infos
+
+
+@app.post("/student/")
+async def create_container(student_info: Dto.UsersModel = None, lecture_id: int = None):
+    id = student_info.id
+    json_num, PORT = yaml_to_json(id, False, lecture_id)
+    for i in range(json_num):
+        json_str = json.load(open("./res/tmp%d.json" % i))
+        if json_str['kind'] == "Pod":
+            url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/pods"
+        elif json_str['kind'] == "Service":
+            url = Urls.kube_base_url+"/api/v1/namespaces/student-ns/services"
+        headers = {"Authorization": "Bearer %s" % (os.getenv('TOKEN')),
+                   'Accept': 'application/json', "Content-Type": "application/json"}
+        result = requests.post(url, data=json.dumps(json_str),
+                               headers=headers, verify=os.getenv('CACERT')).text
+        if result == False:  # TODO deliver error message
+            print("Error in creating student, id:"+id)
+        else:
+            print("Student %d's port is %d" %
+                  (id, PORT))
+            return Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT)
