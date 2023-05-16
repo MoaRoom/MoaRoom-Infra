@@ -68,6 +68,7 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
                                headers=headers, verify=os.getenv('CACERT')).text
         if result == False:  # TODO deliver error message
             print("Error in creating professor, id:"+id)
+            return 0
         else:
             print("Professor %s's port is %d" %
                   (id, PORT))
@@ -103,7 +104,7 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
                     Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT))
                 print("Student %s's port is %d" %
                       (id, PORT))
-        return student_pod_infos
+    return student_pod_infos
 
 
 @app.post("/student/")
@@ -122,6 +123,7 @@ async def create_container(student_info: Dto.UsersModel = None, lecture_id: str 
                                headers=headers, verify=os.getenv('CACERT')).text
         if result == False:  # TODO deliver error message
             print("Error in creating student, id:"+id)
+            return 0
         else:
             print("Student %s's port is %d" %
                   (id, PORT))
