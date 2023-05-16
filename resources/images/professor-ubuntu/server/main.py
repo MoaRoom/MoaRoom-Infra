@@ -13,7 +13,7 @@ app = FastAPI()
 
 def schedule_cronjob(dt, assignment_id):
     month, day, hour, minute = dt.month, dt.day, dt.hour, dt.minute
-    os.system('/bin/bash %s/cronjob.sh %d %d %d %d %d' %
+    os.system('/bin/bash %s/cronjob.sh %d %d %d %d %s' %
               (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id))
 
 
@@ -23,8 +23,9 @@ def create_directories(assignment_id, data_users_assigned):
     for user in data_users_assigned:
         # mkdir in student
         encoded_dir_path_student = base64.b64encode((
-            dir_path_student+"/"+str(assignment_id)).encode('ascii')).decode('ascii')  # base64 encode
-        url = Urls.student_base_url+"/mkdir/"+encoded_dir_path_student
+            dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
+        url = Urls.student_base_url+"/mkdir/" + \
+            encoded_dir_path_student  # TODO URLModel 적용 필요
         result = requests.post(url).text
         if result == False:
             print("Error in mkdir, uid:"+user.id)
@@ -37,7 +38,7 @@ def create_directories(assignment_id, data_users_assigned):
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
     json_str = requests.get(Urls.base_url+"?assignment_id="+assignment_id).text
-    data_users_assigned = list(json.loads(json_str))  # json to list[dict]
+    data_users_assigned = list(json.loads(json_str))   # TODO URLModel 적용 필요
     due_date = assignment_info.due_date
 
     # mkdir

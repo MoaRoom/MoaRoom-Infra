@@ -4,7 +4,7 @@ import datetime
 
 
 class UsersModel(BaseModel):
-    id: int
+    id: str
     user_id: str
     password: str
     name: str
@@ -13,23 +13,24 @@ class UsersModel(BaseModel):
 
 
 class LectureModel(BaseModel):
-    lecture_id: int
+    lecture_id: str
     title: str
+    professor_id: str
     room: int
-    professor_id: int
+    room_count: int
 
 
 class StepModel(BaseModel):
-    assignment_id: int
-    lecture_id: int
-    user_id: int
+    assignment_id: str
+    lecture_id: str
+    user_id: str
     step: int
     score: int
 
 
 class AssignmentModel(BaseModel):
-    assignment_id: int
-    lecture_id: int
+    assignment_id: str
+    lecture_id: str
     title: str
     start_date: datetime.datetime
     due_date: datetime.datetime
@@ -37,6 +38,6 @@ class AssignmentModel(BaseModel):
 
 
 class URLModel(BaseModel):
-    id: int
-    lecture_id: int
+    id: str
+    lecture_id: str
     url: str
