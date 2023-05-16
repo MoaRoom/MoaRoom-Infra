@@ -11,13 +11,13 @@ import numpy as np
 app = FastAPI()
 
 
-def yaml_to_json(id, isProfessor, lecture_id=-1):
+def yaml_to_json(id, isProfessor):
     if isProfessor:
         role = "professor"
     else:
         role = "student"
     f = open("./res/remote-deploy-%s.yml" % role, 'r')
-    ID = str(id)
+    ID = id
 
     port_list = list(np.load("./res/port_list.npy"))
 
@@ -69,7 +69,7 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
         if result == False:  # TODO deliver error message
             print("Error in creating professor, id:"+id)
         else:
-            print("Professor %d's port is %d" %
+            print("Professor %s's port is %d" %
                   (id, PORT))
             # professor has multiple lectures, lecture_id doesn't matter(-1)
             return Dto.URLModel(id, -1, Urls.base_url+":%d" % PORT)
@@ -85,7 +85,7 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
     for user in data_users_assigned:
         id = user.id
         lecture_id = lecture_info.lecture_id
-        json_num, PORT = yaml_to_json(id, False, lecture_id)
+        json_num, PORT = yaml_to_json(id, False)
         for i in range(json_num):
             json_str = json.load(open("./res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
@@ -101,15 +101,15 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
             else:
                 student_pod_infos.append(
                     Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT))
-                print("Student %d's port is %d" %
+                print("Student %s's port is %d" %
                       (id, PORT))
         return student_pod_infos
 
 
 @app.post("/student/")
-async def create_container(student_info: Dto.UsersModel = None, lecture_id: int = None):
+async def create_container(student_info: Dto.UsersModel = None, lecture_id: str = None):
     id = student_info.id
-    json_num, PORT = yaml_to_json(id, False, lecture_id)
+    json_num, PORT = yaml_to_json(id, False)
     for i in range(json_num):
         json_str = json.load(open("./res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
@@ -123,6 +123,6 @@ async def create_container(student_info: Dto.UsersModel = None, lecture_id: int 
         if result == False:  # TODO deliver error message
             print("Error in creating student, id:"+id)
         else:
-            print("Student %d's port is %d" %
+            print("Student %s's port is %d" %
                   (id, PORT))
             return Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT)
