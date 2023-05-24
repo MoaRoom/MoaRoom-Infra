@@ -20,7 +20,6 @@ def yaml_to_json(id, isProfessor):
     ID = id
 
     port_list = list(np.load("./res/port_list.npy"))
-
     # find available port
     for port_num in range(8887, len(port_list)):
         # no pod assigned
@@ -32,9 +31,25 @@ def yaml_to_json(id, isProfessor):
         else:
             continue
 
+    # find api url's port
+    API_PORT = -1
+    if isProfessor:
+        port_list = list(np.load("./res/port_list.npy"))
+        # find available port
+        for port_num in range(8010, 8887):
+            # no pod assigned
+            if port_list[port_num] == False:
+                API_PORT = port_num
+                port_list[port_num] = True
+                np.save("./res/port_list.npy", port_list)
+                break
+            else:
+                continue
+
     # apply env var
     file = f.read().replace("{{ ID }}", ID)
     file = file.replace("{ PORT }", str(PORT))
+    file = file.replace("{ API_PORT }", str(API_PORT))
     contents = file.split("---")
     for i in range(len(contents)):
         with open("./res/tmp%d.yml" % i, "w") as tmp:
@@ -46,14 +61,14 @@ def yaml_to_json(id, isProfessor):
             yaml_object = yaml.safe_load(yaml_in)
             json.dump(yaml_object, json_out)
 
-    return len(contents), PORT  # object file num, port
+    return len(contents), PORT, API_PORT  # object file num, port
 
 
 @app.post("/professor/")
 async def create_professor_res(professor_info: Dto.UsersModel = None):
     id = professor_info.id
 
-    json_num, PORT = yaml_to_json(id, True)
+    json_num, PORT, API_PORT = yaml_to_json(id, True)
 
     for i in range(json_num):
         json_str = json.load(open(
@@ -70,10 +85,10 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
             print("Error in creating professor, id:"+id)
             return 0
         else:
-            print("Professor %s's port is %d" %
-                  (id, PORT))
+            print("Professor %s's port is %d, api port id %d" %
+                  (id, PORT, API_PORT))
             # professor has multiple lectures, lecture_id doesn't matter(-1)
-            return Dto.URLModel(id, -1, Urls.base_url+":%d" % PORT)
+            return Dto.URLModel(id, -1, Urls.base_url+":%d" % PORT, Urls.base_url+":%d" % API_PORT)
 
 
 @app.post("/lecture/")
@@ -86,7 +101,8 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
     for user in data_users_assigned:
         id = user.id
         lecture_id = lecture_info.lecture_id
-        json_num, PORT = yaml_to_json(id, False)
+        json_num, PORT, API_PORT = yaml_to_json(
+            id, False)  # no api port for student
         for i in range(json_num):
             json_str = json.load(open("./res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
@@ -101,7 +117,7 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
                 print("Error in creating student, id:"+id)
             else:
                 student_pod_infos.append(
-                    Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT))
+                    Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT, str(API_PORT)))  # API_PORT -1
                 print("Student %s's port is %d" %
                       (id, PORT))
     return student_pod_infos
@@ -110,7 +126,8 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
 @app.post("/student/")
 async def create_container(student_info: Dto.UsersModel = None, lecture_id: str = None):
     id = student_info.id
-    json_num, PORT = yaml_to_json(id, False)
+    json_num, PORT, API_PORT = yaml_to_json(
+        id, False)  # no api port for student
     for i in range(json_num):
         json_str = json.load(open("./res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
@@ -127,4 +144,5 @@ async def create_container(student_info: Dto.UsersModel = None, lecture_id: str 
         else:
             print("Student %s's port is %d" %
                   (id, PORT))
-            return Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT)
+            # API_PORT -1
+            return Dto.URLModel(id, lecture_id, Urls.base_url+":%d" % PORT, str(API_PORT))
