@@ -59,17 +59,20 @@ class URLModel(BaseModel):
 ### 1. `/professor/{professor_info : UsersModel}`
 
 - 용도: Professor 생성 시 호출, 컨테이너 할당, url 반환
+- request type: `POST`
 - return type: `URLModel`
 
 ### 2. (deprecated)~~`/lecture/{lecture_info : LectureModel}`~~
 
 - 용도: Lecture 생성 시 호출, Lecture을 수강하는 학생들의 컨테이너 할당, 학생들의 url 반환
 - **특이사항**: `lecture_info.lecture_id`를 통해 lecture를 수강하는 학생의 리스트(list(UsersModel))를 받음
+- request type: `POST`
 - return type: `list(URLModel)`
 
 ### 3. `/student/{student_info : UsersModel, lecture_id : int}`
 
 - 용도: 학생이 Lecture 수강신청 시 호출, 학생의 컨테이너 할당, 학생의 url 반환(URLModel)
+- request type: `POST`
 - return type: `URLModel`
 
 ## ✅ Professor
@@ -78,11 +81,19 @@ class URLModel(BaseModel):
 
 > 구매 후 ip 및 도메인은 변경될 예정
 
-### 1. `/assignment/{assignment_info : AssignmentModel}`
+### 1. `/assignments/{assignment_info : AssignmentModel}`
 
 - 용도: Assignment 생성 시 호출, Assignment를 할당받은 학생들의 pod에 과제 제출 디렉토리를 생성, 과제 마감 시 Professor 컨테이너로 과제 수거
 - **특이사항**: `assignment_info.assignment_id`를 통해 해당 assignment가 할당된 학생들의 컨테이너 url 리스트(list(URLModel))를 받음
+- request type: `POST`
 - return type: None
+
+### 2. `/assignment/{id: str, assignment_id: str}`
+
+- 용도: 프론트에서 학생의 과제를 보여줄 때 사용
+- **특이사항**: 마감 시 retrieve 후 교수의 local에서 봄
+- request type: `GET`
+- return type: {"content":"file content~~~"}
 
 ## ✅ Student
 
@@ -93,9 +104,11 @@ class URLModel(BaseModel):
 ### 1. `/mkdir/{dir_path : str}`
 
 - 용도: 과제 생성 시 Student 컨테이너의 과제 디렉토리 생성
+- request type: `POST`
 - return type: boolean
 
 ### 2. `/files/{dir_path : str}`
 
 - 용도: 과제 마감 시 Student 컨테이너의 과제 디렉토리에 있는 내용을 전달
+- request type: `GET`
 - return type: json
