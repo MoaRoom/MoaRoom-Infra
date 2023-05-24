@@ -46,6 +46,7 @@ class URLModel(BaseModel):
     id: str
     lecture_id: str
     url: str
+    api_url: Optional[str]
 
 ```
 
