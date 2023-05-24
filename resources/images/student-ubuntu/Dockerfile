@@ -55,7 +55,7 @@ COPY . /root/workdir
 ## WebSSh ( with Python3 )
 RUN pip3 install -r ./webssh/requirements.txt 
 
-EXPOSE 8888-9888
+EXPOSE 8887-9888
 
 ## API server
 RUN pip3 install -r ./server/requirements.txt 

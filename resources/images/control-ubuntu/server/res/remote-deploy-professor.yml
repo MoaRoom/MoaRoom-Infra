@@ -37,7 +37,7 @@ spec:
       port: { PORT }
       targetPort: webssh-port
     - name: server
-      port: 8001
+      port: { API_PORT }
       targetPort: server-port
   selector:
     app: professor-label-{{ ID }}

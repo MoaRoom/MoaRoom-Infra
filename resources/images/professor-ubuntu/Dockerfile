@@ -50,12 +50,12 @@ COPY . /root/workdir
 ## WebSSh ( with Python3 )
 RUN pip3 install -r ./webssh/requirements.txt 
 
-EXPOSE 8889
+EXPOSE 8887-9888
 
 ## API server
 RUN pip3 install -r ./server/requirements.txt 
 
-EXPOSE 8002
+EXPOSE 8001-8886
 
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
