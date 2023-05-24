@@ -70,3 +70,4 @@ CMD ["./startup.sh"]
 ### 1.1: + Banner
 ## 2.0: + professor api
 ### 2.1: + env variables applied
+## 3.0: api added (GET /assignment/)

@@ -34,7 +34,7 @@ def create_directories(assignment_id, data_users_assigned):
         os.makedirs("%s/%s/%s" % (dir_path_professor, assignment_id, user.id))
 
 
-@app.post("/assignment/")
+@app.post("/assignments/")
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
     json_str = requests.get(Urls.base_url+"?assignment_id="+assignment_id).text
@@ -46,5 +46,20 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
 
     # cron
     schedule_cronjob(due_date, assignment_id)
-    
+
     return True
+
+
+@app.get("/assignment/")
+async def get_assignment(id: str, assignment_id: str):
+    dir_path_professor = Urls.dir_path_professor
+    dir_path = "%s/%s/%s" % (dir_path_professor, assignment_id, id)
+    file_list = os.listdir(dir_path)
+    return_dict = {}
+    for file in file_list:
+        f = open(dir_path+"/"+file, "r")
+        content = f.read()
+        return_dict["content"] = content
+        f.close()
+
+    return json.dumps(return_dict)
