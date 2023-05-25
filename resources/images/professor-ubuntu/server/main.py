@@ -2,6 +2,7 @@
 import requests
 from fastapi import FastAPI
 from flask_pydantic import validate
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import base64
@@ -10,6 +11,18 @@ import res.Urls as Urls
 
 app = FastAPI()
 
+# CORS
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def schedule_cronjob(dt, assignment_id):
     month, day, hour, minute = dt.month, dt.day, dt.hour, dt.minute

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import requests
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import yaml
@@ -10,6 +11,18 @@ import numpy as np
 
 app = FastAPI()
 
+# CORS
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def yaml_to_json(id, isProfessor):
     if isProfessor:
