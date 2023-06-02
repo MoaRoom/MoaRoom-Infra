@@ -2,7 +2,7 @@
 # set environment variables
 i=1
 while read line || [ -n "$line" ] ; do
-  echo "export $line > /dev/null 2>&1" >> /etc/profile
+  echo "export $line > /dev/null 2>&1" >> /etc/profile 
   ((i+=1))
 done < ./.env
 source /etc/profile > /dev/null 2>&1
@@ -27,8 +27,8 @@ mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 
 # Banner
-# cp /root/workdir/issue.net /etc/issue.net # 원격 접속 시도 시
-# cp /root/workdir/issue.net /etc/issue     # 콘솔 접속 시도 시
+cp /root/workdir/motd /etc/issue.net # 원격 접속 시도 시
+cp /root/workdir/motd /etc/issue     # 콘솔 접속 시도 시
 mv /root/workdir/motd /etc/motd        # 로그인 성공 시
 
 

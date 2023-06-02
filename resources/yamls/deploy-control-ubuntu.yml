@@ -4,6 +4,16 @@ metadata:
   name: control-ns
 ---
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: professor-ns
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: student-ns
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: access-to-apiserver-sa
@@ -16,7 +26,7 @@ metadata:
   namespace: control-ns
 rules:
   - apiGroups:
-      - ""
+      - "*"
     resources:
       - pods
       - services
@@ -47,7 +57,7 @@ metadata:
 spec:
   containers:
     - name: control-ubuntu
-      image: control-ubuntu:1.2
+      image: control-ubuntu:3.2
       ports:
         - name: nginx-port
           containerPort: 80

@@ -17,18 +17,20 @@ RUN apt-get upgrade -y
 RUN apt-get autoclean 
 RUN apt-get dist-upgrade
 
-## SSH
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu vivid main restricted universe" >> /etc/apt/sources.list # libffi-dev
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc 
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc tzdata
+
+## TZ
+ENV TZ=Asia/Seoul
+RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+
 # 컨테이너 이미지 파일의 크기를 줄이기 위해 apt 수행 중 생성된 임시 파일들을 삭제해준다.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN mkdir /var/run/sshd
 
-# Add env
-COPY .env ./
-RUN export $(cat .env | xargs)
+## SSH
 
 # root 계정으로의 로그인을 허용한다. 아래 명령을 추가하지 않으면 root 계정으로 로그인이 불가능하다. 
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -60,7 +62,7 @@ EXPOSE 8887-9888
 ## API server
 RUN pip3 install -r ./server/requirements.txt 
 
-EXPOSE 8001
+EXPOSE 8001-8886
 
 ## run ssh connection and nginx with startup.sh
 RUN chmod +x /root/workdir/startup.sh
@@ -75,3 +77,6 @@ CMD ["./startup.sh"]
 ## 2.0: access ssh/nginx + webssh applied version
 ## 3.0: access ssh/nginx + webssh +  api applied version
 ### 3.1: + Banner
+## 4.0: connect with BE
+### 4.1: change rep type from model to dict
+### 4.2: added timezone
