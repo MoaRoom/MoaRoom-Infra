@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: professor-{{ ID }}
-      image: ryann3/professor-ubuntu:4.0
+      image: ryann3/professor-ubuntu:4.2
       ports:
         - name: nginx-port
           containerPort: 80
