@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 import datetime
 
@@ -32,13 +32,13 @@ class AssignmentModel(BaseModel):
     assignment_id: str
     lecture_id: str
     title: str
-    start_date: datetime.datetime
-    due_date: datetime.datetime
+    start_date: List[int]
+    due_date: List[int]
     description: str
 
 
 class URLModel(BaseModel):
     id: str
     lecture_id: str
-    url: str
-    api_url: Optional[str]
+    container_address: str
+    api_endpoint: Optional[str]

@@ -14,6 +14,7 @@ app = FastAPI()
 # CORS
 origins = [
     "http://localhost:3000",
+    "http://moaroom-back.duckdns.org:8080",
 ]
 
 app.add_middleware(
@@ -24,8 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def schedule_cronjob(dt, assignment_id):
-    month, day, hour, minute = dt.month, dt.day, dt.hour, dt.minute
+    month, day, hour, minute = dt[1], dt[2], dt[3], dt[4]
     os.system('/bin/bash %s/cronjob.sh %d %d %d %d %s' %
               (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id))
 
@@ -37,21 +39,24 @@ def create_directories(assignment_id, data_users_assigned):
         # mkdir in student
         encoded_dir_path_student = base64.b64encode((
             dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
-        url = Urls.student_base_url+"/mkdir/" + \
-            encoded_dir_path_student  # TODO URLModel 적용 필요
+        urlmodel = json.loads(requests.get(
+            Urls.base_url+"/url/"+user["id"]).text)
+        url = urlmodel["apiEndpoint"]+"/mkdir/" + encoded_dir_path_student
         result = requests.post(url).text
         if result == False:
-            print("Error in mkdir, uid:"+user.id)
+            print("Error in mkdir, uid:"+user["id"])
 
         # mkdir in professor
-        os.makedirs("%s/%s/%s" % (dir_path_professor, assignment_id, user.id))
+        os.makedirs("%s/%s/%s" %
+                    (dir_path_professor, assignment_id, user["id"]))
 
 
 @app.post("/assignments/")
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
-    json_str = requests.get(Urls.base_url+"?assignment_id="+assignment_id).text
-    data_users_assigned = list(json.loads(json_str))   # TODO URLModel 적용 필요
+    json_str = requests.get(
+        Urls.base_url+"/assignment/list/"+assignment_id).text
+    data_users_assigned = list(json.loads(json_str))
     due_date = assignment_info.due_date
 
     # mkdir
