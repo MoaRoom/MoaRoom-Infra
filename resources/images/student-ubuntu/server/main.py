@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
@@ -10,6 +9,7 @@ app = FastAPI()
 # CORS
 origins = [
     "http://localhost:3000",
+    "http://moaroom-back.duckdns.org:8080",
 ]
 
 app.add_middleware(
@@ -20,7 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/mkdir/")
+
+@app.post("/mkdir/{dir_name}")
 async def make_dir(dir_name: str = None):
     # base64 decoded
     decoded_dir_name = base64.b64decode(dir_name).decode('ascii')
@@ -32,7 +33,7 @@ async def make_dir(dir_name: str = None):
         return False
 
 
-@app.get("/files/")
+@app.get("/files/{dir_path}")
 async def read_files_from_dir(dir_path: str = None):
     # base64 decoded
     decoded_dir_path = base64.b64decode(dir_path).decode('ascii')
