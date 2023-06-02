@@ -20,7 +20,7 @@ RUN apt-get dist-upgrade
 ## SSH
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu vivid main restricted universe" >> /etc/apt/sources.list # libffi-dev
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc cron
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc cron dnsutils
 # 컨테이너 이미지 파일의 크기를 줄이기 위해 apt 수행 중 생성된 임시 파일들을 삭제해준다.
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -67,3 +67,5 @@ CMD ["./startup.sh"]
 ### 1.1: api entity testing version
 ### 1.2: port list check version
 ## 2.1: k8s version
+## 3.0: connect with BE
+### 3.1: change rep type from model to dict

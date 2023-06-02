@@ -26,6 +26,11 @@ echo "root:${SSH_PASSWORD}" | chpasswd
 mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
 
+# Banner
+cp /root/workdir/motd /etc/issue.net # 원격 접속 시도 시
+cp /root/workdir/motd /etc/issue     # 콘솔 접속 시도 시
+mv /root/workdir/motd /etc/motd        # 로그인 성공 시
+
 # init port list
 python3 ./server/res/init_port_list.py /root/workdir/server/res
 

@@ -8,14 +8,14 @@ metadata:
 spec:
   containers:
     - name: professor-{{ ID }}
-      image: ryann3/professor-ubuntu:2.1
+      image: ryann3/professor-ubuntu:4.0
       ports:
         - name: nginx-port
           containerPort: 80
         - name: ssh-port
           containerPort: 22
         - name: webssh-port
-          containerPort: 8887
+          containerPort: 8888
         - name: server-port
           containerPort: 8001
       resources: {}
