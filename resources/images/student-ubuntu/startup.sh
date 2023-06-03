@@ -34,7 +34,7 @@ mv /root/workdir/motd /etc/motd        # 로그인 성공 시
 # run foreground and daemon
 # # wssh --fbidhttp=False &
 # python3 ./webssh/run.py &
-python3 ./webssh/run.py --fbidhttp=False --port=$((${WEBSSH_PORT})) & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
+python3 ./webssh/run.py --fbidhttp=False --port=$((${WEBSSH_PORT})) --xsrf=False & # --certfile='/root/.ssh/keys/tls.crt' --keyfile='/root/.ssh/keys/tls.key' &
 cd /root/workdir/server && python3 -m uvicorn main:app --reload --host=0.0.0.0 --port=8001 &
 /usr/sbin/sshd &
 /usr/sbin/nginx -g "daemon off;"
