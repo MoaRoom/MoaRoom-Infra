@@ -123,7 +123,7 @@ async def create_lecture(lecture_info: Dto.LectureModel = None):
         id = user["id"]
         lecture_id = lecture_info.lecture_id
         json_num, PORT, API_PORT = yaml_to_json(
-            id, False)  # no api port for student
+            id+"-"+lecture_id, False)  # no api port for student
         for i in range(json_num):
             json_str = json.load(open("./res/tmp%d.json" % i))
             if json_str['kind'] == "Pod":
@@ -153,8 +153,8 @@ async def create_container(reqBody: dict = None):
     lecture_id = reqBody["lecture_id"]
 
     id = student_info["id"]
-    json_num, PORT, API_PORT = yaml_to_json(
-        id, False)  # no api port for student
+    pod_id = id+"-"+lecture_id
+    json_num, PORT, API_PORT = yaml_to_json(pod_id, False)
     for i in range(json_num):
         json_str = json.load(open("./res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
@@ -166,12 +166,12 @@ async def create_container(reqBody: dict = None):
         result = requests.post(url, data=json.dumps(json_str),
                                headers=headers, verify=os.getenv('CACERT')).text
         if result == False:
-            print("Error in creating student, id:"+id)
+            print("Error in creating student, id:"+pod_id)
             return 0
     print("Student %s's port is %d, api port id %d" %
-          (id, PORT, API_PORT))
+          (pod_id, PORT, API_PORT))
     # url: webssh, api_url: internal api in k8s
     url = Urls.kube_base_url+":%d" % PORT
     api_url = "http://student-%s-svc.student-ns.svc.cluster.local:%d" % (
-        id, API_PORT)
+        pod_id, API_PORT)
     return Dto.URLModel(id=student_info["user_id"], lecture_id=lecture_id, container_address=url, api_endpoint=api_url)
