@@ -37,9 +37,6 @@ spec:
     - name: http
       port: 81
       targetPort: nginx-port
-    - name: ssh
-      port: 22
-      targetPort: ssh-port
     - name: webssh
       port: 8888
       targetPort: webssh-port
