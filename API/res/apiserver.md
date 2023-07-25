@@ -9,7 +9,7 @@ CoreDNS is running at https://kubernetes.docker.internal:6443/api/v1/namespaces/
 ```
 
 ```bash
-k proxy --port=8080 &
+k proxy --port=8080 --address="127.0.0.01" --accept-hosts='^*$' &
 ```
 
 ## ✅ 환경변수 설정
@@ -46,7 +46,7 @@ with open('tmp0.json') as f:
     data = f.read().replace('\n', '').replace('\r', '').encode()
 
 response = requests.post(
-    'http://' + os.getenv('APISERVER', '') + '/api/v1/namespaces/student-ns/pods',
+    os.getenv('APISERVER', '') + '/api/v1/namespaces/student-ns/pods',
     headers=headers,
     data=data,
     verify=os.getenv('CACERT', ''),
