@@ -1,15 +1,15 @@
 #!/bin/sh
-DEV_BRANCH=feat/${WEBSSH_BRANCH}
+# DEV_BRANCH=feat/nkeum-dev
 
-# sync webssh
-item=webssh
-git clone https://github.com/NayeonKeum/$item.git
-cd $item
-git remote update
-git fetch
-git checkout ${DEV_BRANCH} 
-git pull origin ${DEV_BRANCH}
-cd ..
+# # sync webssh
+# item=webssh
+# git clone https://github.com/NayeonKeum/$item.git
+# cd $item
+# git remote update
+# git fetch
+# git checkout ${DEV_BRANCH} 
+# git pull origin ${DEV_BRANCH}
+# cd ..
 
 # cp res files
 RES_DIR_PATH=../../res
