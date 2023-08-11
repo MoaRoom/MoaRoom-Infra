@@ -30,4 +30,4 @@ jobs:
           file: ./resources/images/student-ubuntu/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ryann3/student-ubuntu:4.0
+          tags: ryann3/student-ubuntu:5.0
