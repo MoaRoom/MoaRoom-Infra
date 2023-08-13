@@ -13,7 +13,7 @@ app = FastAPI()
 
 # CORS
 origins = [
-    "http://localhost:3000",
+    "http://moaroom-back.duckdns.org:3000",
     "http://moaroom-back.duckdns.org:8080",
 ]
 
