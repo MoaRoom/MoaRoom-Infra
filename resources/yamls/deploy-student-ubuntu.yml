@@ -9,6 +9,7 @@ spec:
   containers:
     - name: student-ubuntu
       image: ryann3/student-ubuntu:5.0
+      imagePullPolicy: Always
       ports:
         - name: nginx-port
           containerPort: 80
