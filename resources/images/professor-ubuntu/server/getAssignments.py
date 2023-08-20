@@ -9,7 +9,7 @@ import base64
 
 assignment_id = sys.argv[1]
 json_str = requests.get(
-    Urls.base_url+"/assignment/list/"+assignment_id).text
+    Urls.base_url+"/assignments/"+assignment_id+"students-urls").text
 data_users_assigned = list(json.loads(json_str))  # json to list[dict]
 
 dir_path = Urls.dir_path_professor
