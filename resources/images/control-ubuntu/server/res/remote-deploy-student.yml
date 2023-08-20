@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: student-{{ ID }}
-      image: ryann3/student-ubuntu:5.0
+      image: ryann3/student-ubuntu:6.0
       imagePullPolicy: Always
       ports:
         - name: nginx-port

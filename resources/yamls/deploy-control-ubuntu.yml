@@ -57,7 +57,7 @@ metadata:
 spec:
   containers:
     - name: control-ubuntu
-      image: ryann3/control-ubuntu:4.0
+      image: ryann3/control-ubuntu:5.0
       imagePullPolicy: Always
       ports:
         - name: nginx-port
