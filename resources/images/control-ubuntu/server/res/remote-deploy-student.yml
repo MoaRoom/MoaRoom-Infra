@@ -37,9 +37,11 @@ spec:
     - name: webssh
       port: { PORT }
       targetPort: webssh-port
+      nodePort: { WEB_NODE_PORT }
     - name: server
       port: { API_PORT }
       targetPort: server-port
+      nodePort: { APP_NODE_PORT }
   selector:
     app: student-label-{{ ID }}
-  type: LoadBalancer
+  type: NodePort

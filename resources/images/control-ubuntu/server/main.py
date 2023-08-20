@@ -34,6 +34,7 @@ def yaml_to_json(id, isProfessor):
     f = open("./res/remote-deploy-%s.yml" % role, 'r')
     ID = id
 
+    # find webssh url's container port
     port_list = list(np.load("./res/port_list.npy"))
     # find available port
     for port_num in range(8887, len(port_list)):
@@ -46,7 +47,7 @@ def yaml_to_json(id, isProfessor):
         else:
             continue
 
-    # find api url's port
+    # find api url's container port
     port_list = list(np.load("./res/port_list.npy"))
     # find available port
     for port_num in range(8004, 8887):
@@ -59,10 +60,38 @@ def yaml_to_json(id, isProfessor):
         else:
             continue
 
+    # find api url's node port
+    port_list = list(np.load("./res/port_list.npy"))
+    # find available port
+    for port_num in range(30002, 31000):
+        # no pod assigned
+        if port_list[port_num] == False:
+            WEB_NODE_PORT = port_num
+            port_list[port_num] = True
+            np.save("./res/port_list.npy", port_list)
+            break
+        else:
+            continue
+    # find api url's node port
+    port_list = list(np.load("./res/port_list.npy"))
+    # find available port
+    for port_num in range(31001, 32767):
+        # no pod assigned
+        if port_list[port_num] == False:
+            APP_NODE_PORT = port_num
+            port_list[port_num] = True
+            np.save("./res/port_list.npy", port_list)
+            break
+        else:
+            continue
+
     # apply env var
     file = f.read().replace("{{ ID }}", ID)
     file = file.replace("{ PORT }", str(PORT))
     file = file.replace("{ API_PORT }", str(API_PORT))
+    file = file.replace("{ WEB_NODE_PORT }", str(WEB_NODE_PORT))
+    file = file.replace("{ APP_NODE_PORT }", str(APP_NODE_PORT))
+
     contents = file.split("---")
     for i in range(len(contents)):
         with open("./res/tmp%d.yml" % i, "w") as tmp:
@@ -74,7 +103,8 @@ def yaml_to_json(id, isProfessor):
             yaml_object = yaml.safe_load(yaml_in)
             json.dump(yaml_object, json_out)
 
-    return len(contents), PORT, API_PORT  # object file num, port
+    # object file num, ports
+    return len(contents), WEB_NODE_PORT, APP_NODE_PORT
 
 
 @app.post("/professor/")
@@ -100,7 +130,7 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
             print("Error in creating professor, id:"+id)
             return 0
 
-    print("Professor %s's port is %d, api port id %d" %
+    print("Professor %s's node port is %d, api node port id %d" %
           (id, PORT, API_PORT))
     # url: webssh, api_url: internal api in k8s
     url = Urls.kube_base_url+":%d" % PORT
