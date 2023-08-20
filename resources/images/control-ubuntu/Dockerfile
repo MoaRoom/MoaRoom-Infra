@@ -76,3 +76,5 @@ CMD ["./startup.sh"]
 ## 3.0: connect with BE
 ### 3.1: change rep type from model to dict
 ### 3.2: added timezone
+## 4.0: Deploy version
+## 5.0: NodePort version
