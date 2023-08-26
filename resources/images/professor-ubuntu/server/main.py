@@ -72,12 +72,22 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
 async def get_assignment(id: str, assignment_id: str):
     dir_path_professor = Urls.dir_path_professor
     dir_path = "%s/%s/%s" % (dir_path_professor, assignment_id, id)
+    curr_path = os.path.dirname(os.path.realpath(__file__))
     file_list = os.listdir(dir_path)
     return_dict = {}
     for file in file_list:
         f = open(dir_path+"/"+file, "r")
         content = f.read()
         return_dict["content"] = content
+        f.close()
+        os.system('/bin/bash %s/getValueAndTime.sh' % curr_path)
+        f = open("%s/values.txt" % curr_path, "r")
+        values = f.read()
+        return_dict["values"] = values
+        f.close()
+        f = open("%s/time.txt" % curr_path, "r")
+        time = f.read()
+        return_dict["time"] = time
         f.close()
 
     return json.dumps(return_dict)
