@@ -33,7 +33,7 @@ class AssignmentModel(BaseModel):
     lecture_id: str
     title: str
     start_date: List[int]
-    due_date: Optional[List[int]]
+    due_date: List[int]
     description: Optional[str]
 
 
