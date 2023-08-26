@@ -1,0 +1,31 @@
+class UsersModel(BaseModel):
+    id: int
+    user_id: str
+    password: str
+    name: str
+    user_num: int
+    role: int
+    
+curl -X POST \
+    http://localhost:8003/professor/ \
+    -H "accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "id": 0,
+        "user_id": "ryann0",
+        "password": "qwer123!",
+        "name": "금나교수",
+        "user_num": 9123,
+        "role": 2
+    }'
+
+curl -X POST \
+    http://localhost:8003/lecture/ \
+    -H "accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "lecture_id": 2110000001,
+        "title": "프입",
+        "room": 1,
+        "professor_id": 0
+    }'
