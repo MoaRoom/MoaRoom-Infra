@@ -33,12 +33,12 @@ class AssignmentModel(BaseModel):
     lecture_id: str
     title: str
     start_date: List[int]
-    due_date: Optional[List[int]]
+    due_date: List[int]
     description: Optional[str]
 
 
 class URLModel(BaseModel):
     id: str
-    lectureId: str
-    containerAddress: str
-    apiEndpoint: Optional[str]
+    lecture_id: str
+    container_address: str
+    api_endpoint: Optional[str]
