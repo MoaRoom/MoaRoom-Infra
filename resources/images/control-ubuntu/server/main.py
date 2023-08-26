@@ -104,7 +104,7 @@ def yaml_to_json(id, isProfessor):
             json.dump(yaml_object, json_out)
 
     # object file num, ports
-    return len(contents), WEB_NODE_PORT, APP_NODE_PORT
+    return len(contents), WEB_NODE_PORT, APP_NODE_PORT, API_PORT
 
 
 @app.post("/professor/")
@@ -113,7 +113,8 @@ def yaml_to_json(id, isProfessor):
 async def create_professor_res(professor_info: Dto.UsersModel = None):
     id = professor_info.id
 
-    json_num, PORT, API_PORT = yaml_to_json(id, True)
+    json_num, PORT, API_PORT, _API_PORT = yaml_to_json(
+        id, True)  # use nodePort for api
 
     for i in range(json_num):
         json_str = json.load(open(
@@ -139,42 +140,6 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
     return Dto.URLModel(id=professor_info.user_id, lecture_id=professor_info.user_id, container_address=url, api_endpoint=api_url)
 
 
-# **deprecated**
-@app.post("/lecture/")
-# Dto.LectureModel = None):
-# : dict = None):
-async def create_lecture(lecture_info: Dto.LectureModel = None):
-    json_str = requests.get(
-        Urls.base_url+"?lecture_id="+lecture_info.lecture_id).text
-    data_users_assigned = list(json.loads(json_str))  # json to list[dict]
-
-    student_pod_infos = []
-    for user in data_users_assigned:
-        id = user["id"]
-        lecture_id = lecture_info.lecture_id
-        json_num, PORT, API_PORT = yaml_to_json(
-            id+"-"+lecture_id, False)  # no api port for student
-        for i in range(json_num):
-            json_str = json.load(open("./res/tmp%d.json" % i))
-            if json_str['kind'] == "Pod":
-                url = Urls.kube_api_server+"/api/v1/namespaces/student-ns/pods"
-            elif json_str['kind'] == "Service":
-                url = Urls.kube_api_server+"/api/v1/namespaces/student-ns/services"
-            headers = {"Authorization": "Bearer %s" % (os.getenv('TOKEN')),
-                       'Accept': 'application/json', "Content-Type": "application/json"}
-            result = requests.post(url, data=json.dumps(json_str),
-                                   headers=headers, verify=os.getenv('CACERT')).text
-            if result == False:
-                print("Error in creating student, id:"+id)
-            else:
-                student_pod_infos.append(
-                    Dto.URLModel(id=id, lecture_id=lecture_id, container_address=Urls.kube_base_url+":%d" % PORT, api_endpoint=str(API_PORT)))
-                print("Student %s's port is %d" %
-                      (id, PORT))
-    return student_pod_infos
-# **deprecated**
-
-
 @app.post("/student/")
 # Dto.UsersModel = None, lecture_id: str = None):
 # student_info: Dto.UsersModel = None, lecture_id: str = None):
@@ -184,7 +149,8 @@ async def create_container(reqBody: dict = None):
 
     id = student_info["id"]
     pod_id = id+"-"+lecture_id
-    json_num, PORT, API_PORT = yaml_to_json(pod_id, False)
+    json_num, PORT, _API_PORT, API_PORT = yaml_to_json(
+        pod_id, False)  # use containerPort for api
     for i in range(json_num):
         json_str = json.load(open("./res/tmp%d.json" % i))
         if json_str['kind'] == "Pod":
