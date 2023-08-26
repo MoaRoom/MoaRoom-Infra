@@ -40,8 +40,8 @@ def create_directories(assignment_id, data_users_assigned):
         encoded_dir_path_student = base64.b64encode((
             dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
         urlmodel = json.loads(requests.get(
-            Urls.base_url+"/url/"+user["id"]).text)
-        url = urlmodel["api_endpoint"]+"/mkdir/" + encoded_dir_path_student
+            Urls.base_url+"/urls/"+user["id"]).text)
+        url = urlmodel["apiEndpoint"]+"/mkdir/" + encoded_dir_path_student
         result = requests.post(url).text
         if result == False:
             print("Error in mkdir, uid:"+user["id"])
