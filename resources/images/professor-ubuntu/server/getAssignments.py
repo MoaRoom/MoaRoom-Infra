@@ -21,7 +21,7 @@ for user in data_users_assigned:
         dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
     urlmodel = json.loads(requests.get(
         Urls.base_url+"/url/"+user["id"]).text)
-    url = urlmodel["apiEndpoint"]+"/files/" + encoded_dir_path_student
+    url = urlmodel["api_endpoint"]+"/files/" + encoded_dir_path_student
     json_str = requests.get(url).text
     # json to dict
     result = json.loads(json.loads(json_str))
