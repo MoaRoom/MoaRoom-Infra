@@ -15,6 +15,7 @@ app = FastAPI()
 origins = [
     "http://moaroom-front.duckdns.org:3000",
     "http://moaroom-back.duckdns.org:8080",
+    "http://localhost:3000",  # for dev
 ]
 
 app.add_middleware(
