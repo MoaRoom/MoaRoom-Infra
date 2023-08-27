@@ -77,11 +77,12 @@ async def get_assignment(id: str, assignment_id: str):
     file_list = os.listdir(dir_path)
     return_dict = {}
     for file in file_list:
-        f = open(dir_path+"/"+file, "r")
+        file_path=dir_path+"/"+file
+        f = open(file_path, "r")
         content = f.read()
         return_dict["content"] = content
         f.close()
-        os.system('/bin/bash %s/getValueAndTime.sh' % curr_path)
+        os.system('/bin/bash %s/getValueAndTime.sh %s' % (curr_path, file_path))
         f = open("%s/values.txt" % curr_path, "r")
         values = f.read()
         return_dict["values"] = values
