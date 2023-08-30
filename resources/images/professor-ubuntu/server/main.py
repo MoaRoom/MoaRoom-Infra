@@ -77,19 +77,20 @@ async def get_assignment(id: str, assignment_id: str):
     file_list = os.listdir(dir_path)
     return_dict = {}
     for file in file_list:
-        file_path=dir_path+"/"+file
+        file_path = dir_path+"/"+file
         f = open(file_path, "r")
         content = f.read()
         return_dict["content"] = content
         f.close()
-        os.system('/bin/bash %s/getValueAndTime.sh %s' % (curr_path, file_path))
+        os.system('/bin/bash %s/getValueAndTime.sh %s' %
+                  (curr_path, file_path))
         f = open("%s/values.txt" % curr_path, "r")
         values = f.read()
-        return_dict["values"] = values
+        return_dict["answer"] = values
         f.close()
         f = open("%s/time.txt" % curr_path, "r")
         time = f.read()
-        return_dict["time"] = time
+        return_dict["runtime"] = time
         f.close()
 
     return json.dumps(return_dict)
