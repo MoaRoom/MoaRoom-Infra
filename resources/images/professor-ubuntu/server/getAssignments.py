@@ -8,6 +8,8 @@ import res.Urls as Urls
 import base64
 
 assignment_id = sys.argv[1]
+lecture_id = sys.argv[2]
+
 json_str = requests.get(
     Urls.base_url+"/assignments/"+assignment_id+"/urls").text
 data_users_assigned = list(json.loads(json_str))  # json to list[dict]
@@ -20,7 +22,7 @@ for user in data_users_assigned:
     encoded_dir_path_student = base64.b64encode((
         dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
     urlmodel = json.loads(requests.get(
-        Urls.base_url+"/urls/"+user["id"]).text)
+        Urls.base_url+"/users/"+user["id"]+"/"+lecture_id+"/url").text)
     url = urlmodel["apiEndpoint"]+"/files/" + encoded_dir_path_student
     json_str = requests.get(url).text
     # json to dict
