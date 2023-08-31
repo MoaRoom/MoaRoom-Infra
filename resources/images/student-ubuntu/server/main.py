@@ -26,7 +26,7 @@ app.add_middleware(
 async def make_dir(dir_name: str = None):
     # base64 decoded
     decoded_dir_name = base64.b64decode(dir_name).decode('ascii')
-    print("decoded_dir_name: %s" % decoded_dir_name)
+    print(f"decoded_dir_name: {decoded_dir_name}")
     try:
         os.makedirs(decoded_dir_name)
         return True
@@ -41,7 +41,7 @@ async def read_files_from_dir(dir_path: str = None):
     returnDict = {}
     file_list = os.listdir(decoded_dir_path)
     for file in file_list:
-        f = open(decoded_dir_path+"/"+file, "r")
+        f = open(f"{decoded_dir_path}/{file}", "r")
         content = f.read()
         returnDict[file] = content
         f.close()

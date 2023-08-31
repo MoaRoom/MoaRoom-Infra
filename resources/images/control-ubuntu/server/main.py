@@ -32,7 +32,7 @@ def yaml_to_json(id, isProfessor):
         role = "professor"
     else:
         role = "student"
-    f = open("./res/remote-deploy-%s.yml" % role, 'r')
+    f = open(f"./res/remote-deploy-{role}.yml", 'r')
     ID = id
 
     # find webssh url's container port
@@ -95,12 +95,12 @@ def yaml_to_json(id, isProfessor):
 
     contents = file.split("---")
     for i in range(len(contents)):
-        with open("./res/tmp%d.yml" % i, "w") as tmp:
+        with open(f"./res/tmp{i}.yml", "w") as tmp:
             tmp.write(contents[i])
 
     # convert yaml to json
     for i in range(len(contents)):
-        with open("./res/tmp%d.yml" % i, 'r') as yaml_in, open("./res/tmp%d.json" % i, "w") as json_out:
+        with open(f"./res/tmp{i}.yml", 'r') as yaml_in, open(f"./res/tmp{i}.json", "w") as json_out:
             yaml_object = yaml.safe_load(yaml_in)
             json.dump(yaml_object, json_out)
 
@@ -119,24 +119,23 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
 
     for i in range(json_num):
         json_str = json.load(open(
-            "./res/tmp%d.json" % i))
+            f"./res/tmp{i}.json"))
         if json_str['kind'] == "Pod":
-            url = Urls.kube_api_server+"/api/v1/namespaces/professor-ns/pods"
+            url = f"{Urls.kube_api_server}/api/v1/namespaces/professor-ns/pods"
         elif json_str['kind'] == "Service":
-            url = Urls.kube_api_server+"/api/v1/namespaces/professor-ns/services"
-        headers = {"Authorization": "Bearer %s" % (os.getenv('TOKEN')),
+            url = f"{Urls.kube_api_server}/api/v1/namespaces/professor-ns/services"
+        headers = {"Authorization": f"Bearer {os.getenv('TOKEN')}",
                    'Accept': 'application/json', "Content-Type": "application/json"}
         result = requests.post(url, data=json.dumps(json_str),
                                headers=headers, verify=os.getenv('CACERT')).text
         if result == False:
-            print("Error in creating professor, id:"+id)
+            print(f"Error in creating professor, id: {id}")
             return 0
 
-    print("Professor %s's node port is %d, api node port id %d" %
-          (id, PORT, API_PORT))
+    print(f"Professor {id}'s node port is {PORT}, api node port id {API_PORT}")
     # url: webssh, api_url: internal api in k8s
-    url = Urls.kube_base_url+":%d" % PORT
-    api_url = Urls.kube_base_url+":%d" % API_PORT
+    url = f"{Urls.kube_base_url}:{PORT}"
+    api_url = f"{Urls.kube_base_url}:{API_PORT}"
     # professor has multiple lectures, lecture_id doesn't matter(-1)
     return Dto.URLModel(id=professor_info.user_id, lecture_id=professor_info.user_id, container_address=url, api_endpoint=api_url)
 
@@ -149,26 +148,24 @@ async def create_container(reqBody: dict = None):
     lecture_id = reqBody["lecture_id"]
 
     id = student_info["id"]
-    pod_id = id+"-"+lecture_id
+    pod_id = f"{id}-{lecture_id}"
     json_num, PORT, _API_PORT, API_PORT = yaml_to_json(
         pod_id, False)  # use containerPort for api
     for i in range(json_num):
-        json_str = json.load(open("./res/tmp%d.json" % i))
+        json_str = json.load(open(f"./res/tmp{i}.json"))
         if json_str['kind'] == "Pod":
-            url = Urls.kube_api_server+"/api/v1/namespaces/student-ns/pods"
+            url = f"{Urls.kube_api_server}/api/v1/namespaces/student-ns/pods"
         elif json_str['kind'] == "Service":
-            url = Urls.kube_api_server+"/api/v1/namespaces/student-ns/services"
-        headers = {"Authorization": "Bearer %s" % (os.getenv('TOKEN')),
+            url = f"{Urls.kube_api_server}/api/v1/namespaces/student-ns/services"
+        headers = {"Authorization": f"Bearer {os.getenv('TOKEN')}",
                    'Accept': 'application/json', "Content-Type": "application/json"}
         result = requests.post(url, data=json.dumps(json_str),
                                headers=headers, verify=os.getenv('CACERT')).text
         if result == False:
-            print("Error in creating student, id:"+pod_id)
+            print(f"Error in creating student, id:{pod_id}")
             return 0
-    print("Student %s's port is %d, api port id %d" %
-          (pod_id, PORT, API_PORT))
+    print(f"Student {pod_id}'s port is {PORT}, api port id {API_PORT}")
     # url: webssh, api_url: internal api in k8s
-    url = Urls.kube_base_url+":%d" % PORT
-    api_url = "http://student-%s-svc.student-ns.svc.cluster.local:%d" % (
-        pod_id, API_PORT)
+    url = f"{Urls.kube_base_url}:{PORT}"
+    api_url = f"http://student-{pod_id}-svc.student-ns.svc.cluster.local:{API_PORT}"
     return Dto.URLModel(id=student_info["user_id"], lecture_id=lecture_id, container_address=url, api_endpoint=api_url)

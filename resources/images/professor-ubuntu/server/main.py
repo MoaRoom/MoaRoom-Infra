@@ -29,8 +29,8 @@ app.add_middleware(
 
 def schedule_cronjob(dt, assignment_id, lecture_id):
     month, day, hour, minute = dt[1], dt[2], dt[3], dt[4]
-    os.system('/bin/bash %s/cronjob.sh %d %d %d %d %s %s' %
-              (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id, lecture_id))
+    os.system(
+        f"/bin/bash {os.path.dirname(os.path.realpath(__file__))}/cronjob.sh {minute} {hour} {day} {month} {assignment_id} {lecture_id}")
 
 
 def create_directories(assignment_id, lecture_id, data_users_assigned):
@@ -39,17 +39,16 @@ def create_directories(assignment_id, lecture_id, data_users_assigned):
     for user in data_users_assigned:
         # mkdir in student
         encoded_dir_path_student = base64.b64encode((
-            dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
+            f"{dir_path_student}/{assignment_id}").encode('ascii')).decode('ascii')  # base64 encode
         urlmodel = json.loads(requests.get(
-            Urls.base_url+"/users/"+user["id"]+"/"+lecture_id+"/url").text)
-        url = urlmodel["apiEndpoint"]+"/mkdir/" + encoded_dir_path_student
+            f"{Urls.base_url}/users/{user['id']}/{lecture_id}/url").text)
+        url = f"{urlmodel['apiEndpoint']}/mkdir/{encoded_dir_path_student}"
         result = requests.post(url).text
         if result == False:
-            print("Error in mkdir, uid:"+user["id"])
+            print(f"Error in mkdir, uid:{user['id']}")
 
         # mkdir in professor
-        os.makedirs("%s/%s/%s" %
-                    (dir_path_professor, assignment_id, user["id"]))
+        os.makedirs(f"{dir_path_professor}/{assignment_id}/{user['id']}")
 
 
 @app.post("/assignments/")
@@ -57,7 +56,7 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
     lecture_id = assignment_info.lecture_id
     json_str = requests.get(
-        Urls.base_url+"/assignments/"+assignment_id+"/urls").text
+        f"{Urls.base_url}/assignments/{assignment_id}/urls").text
     data_users_assigned = list(json.loads(json_str))
     due_date = assignment_info.due_date
 
@@ -73,23 +72,22 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
 @app.get("/assignment/")
 async def get_assignment(id: str, assignment_id: str):
     dir_path_professor = Urls.dir_path_professor
-    dir_path = "%s/%s/%s" % (dir_path_professor, assignment_id, id)
+    dir_path = f"{dir_path_professor}/{assignment_id}/{id}"
     curr_path = os.path.dirname(os.path.realpath(__file__))
     file_list = os.listdir(dir_path)
     return_dict = {}
     for file in file_list:
-        file_path = dir_path+"/"+file
+        file_path = f"{dir_path}/{file}"
         f = open(file_path, "r")
         content = f.read()
         return_dict["content"] = content
         f.close()
-        os.system('/bin/bash %s/getValueAndTime.sh %s' %
-                  (curr_path, file_path))
-        f = open("%s/values.txt" % curr_path, "r")
+        os.system(f"/bin/bash {curr_path}/getValueAndTime.sh {file_path}")
+        f = open(f"{curr_path}/values.txt", "r")
         values = f.read()
         return_dict["answer"] = values
         f.close()
-        f = open("%s/time.txt" % curr_path, "r")
+        f = open(f"{curr_path}/time.txt", "r")
         time = f.read()
         return_dict["runtime"] = time
         f.close()
