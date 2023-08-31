@@ -27,10 +27,10 @@ app.add_middleware(
 )
 
 
-def schedule_cronjob(dt, assignment_id):
+def schedule_cronjob(dt, assignment_id, lecture_id):
     month, day, hour, minute = dt[1], dt[2], dt[3], dt[4]
-    os.system('/bin/bash %s/cronjob.sh %d %d %d %d %s' %
-              (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id))
+    os.system('/bin/bash %s/cronjob.sh %d %d %d %d %s %s' %
+              (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id, lecture_id))
 
 
 def create_directories(assignment_id, data_users_assigned):
@@ -55,6 +55,7 @@ def create_directories(assignment_id, data_users_assigned):
 @app.post("/assignments/")
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
+    lecture_id = assignment_info.lecture_id
     json_str = requests.get(
         Urls.base_url+"/assignments/"+assignment_id+"/urls").text
     data_users_assigned = list(json.loads(json_str))
@@ -64,7 +65,7 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     create_directories(assignment_id, data_users_assigned)
 
     # cron
-    schedule_cronjob(due_date, assignment_id)
+    schedule_cronjob(due_date, assignment_id, lecture_id)
 
     return True
 
