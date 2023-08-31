@@ -33,7 +33,7 @@ def schedule_cronjob(dt, assignment_id, lecture_id):
               (os.path.dirname(os.path.realpath(__file__)), minute, hour, day, month, assignment_id, lecture_id))
 
 
-def create_directories(assignment_id, data_users_assigned):
+def create_directories(assignment_id, lecture_id, data_users_assigned):
     dir_path_student = Urls.dir_path_student
     dir_path_professor = Urls.dir_path_professor
     for user in data_users_assigned:
@@ -41,7 +41,7 @@ def create_directories(assignment_id, data_users_assigned):
         encoded_dir_path_student = base64.b64encode((
             dir_path_student+"/"+assignment_id).encode('ascii')).decode('ascii')  # base64 encode
         urlmodel = json.loads(requests.get(
-            Urls.base_url+"/urls/"+user["id"]).text)
+            Urls.base_url+"/users/"+user["id"]+"/"+lecture_id+"/url").text)
         url = urlmodel["apiEndpoint"]+"/mkdir/" + encoded_dir_path_student
         result = requests.post(url).text
         if result == False:
@@ -62,7 +62,7 @@ async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     due_date = assignment_info.due_date
 
     # mkdir
-    create_directories(assignment_id, data_users_assigned)
+    create_directories(assignment_id, lecture_id, data_users_assigned)
 
     # cron
     schedule_cronjob(due_date, assignment_id, lecture_id)
