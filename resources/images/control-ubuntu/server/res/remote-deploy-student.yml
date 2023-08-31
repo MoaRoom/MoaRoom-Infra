@@ -1,34 +1,25 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: student-{{ ID }}
   namespace: student-ns
   labels:
     app: student-label-{{ ID }}
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: student-label-{{ ID }}
-  template:
-    metadata:
-      labels:
-        app: student-label-{{ ID }}
-    spec:
-      containers:
-        - name: student-{{ ID }}
-          image: ryann3/student-ubuntu:6.0
-          imagePullPolicy: Always
-          ports:
-            - name: nginx-port
-              containerPort: 80
-            - name: ssh-port
-              containerPort: 22
-            - name: webssh-port
-              containerPort: 8888
-            - name: server-port
-              containerPort: 8001
-          resources: {}
+  containers:
+    - name: student-{{ ID }}
+      image: ryann3/student-ubuntu:6.0
+      imagePullPolicy: Always
+      ports:
+        - name: nginx-port
+          containerPort: 80
+        - name: ssh-port
+          containerPort: 22
+        - name: webssh-port
+          containerPort: 8888
+        - name: server-port
+          containerPort: 8001
+      resources: {}
 ---
 apiVersion: v1
 kind: Service

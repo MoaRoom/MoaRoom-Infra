@@ -124,6 +124,8 @@ async def create_professor_res(professor_info: Dto.UsersModel = None):
             url = f"{Urls.kube_api_server}/api/v1/namespaces/professor-ns/pods"
         elif json_str['kind'] == "Service":
             url = f"{Urls.kube_api_server}/api/v1/namespaces/professor-ns/services"
+        else:
+            url = f"{Urls.kube_api_server}"
         headers = {"Authorization": f"Bearer {os.getenv('TOKEN')}",
                    'Accept': 'application/json', "Content-Type": "application/json"}
         result = requests.post(url, data=json.dumps(json_str),
@@ -157,6 +159,8 @@ async def create_container(reqBody: dict = None):
             url = f"{Urls.kube_api_server}/api/v1/namespaces/student-ns/pods"
         elif json_str['kind'] == "Service":
             url = f"{Urls.kube_api_server}/api/v1/namespaces/student-ns/services"
+        else:
+            url = f"{Urls.kube_api_server}"
         headers = {"Authorization": f"Bearer {os.getenv('TOKEN')}",
                    'Accept': 'application/json', "Content-Type": "application/json"}
         result = requests.post(url, data=json.dumps(json_str),
