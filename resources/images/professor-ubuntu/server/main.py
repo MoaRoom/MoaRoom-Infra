@@ -56,7 +56,7 @@ def create_directories(assignment_id, data_users_assigned):
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
     json_str = requests.get(
-        Urls.base_url+"/assignments/"+assignment_id+"/students-urls").text
+        Urls.base_url+"/assignments/"+assignment_id+"/urls").text
     data_users_assigned = list(json.loads(json_str))
     due_date = assignment_info.due_date
 
