@@ -47,29 +47,38 @@ roleRef:
   kind: ClusterRole
   name: access-to-apiserver-cr
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: control-ubuntu
   namespace: control-ns
   labels:
     app: control-label
 spec:
-  containers:
-    - name: control-ubuntu
-      image: ryann3/control-ubuntu:5.0
-      imagePullPolicy: Always
-      ports:
-        - name: nginx-port
-          containerPort: 80
-        - name: ssh-port
-          containerPort: 22
-        - name: server-port
-          containerPort: 8003
-        - name: webssh-port
-          containerPort: 8886
-      resources: {}
-  serviceAccountName: access-to-apiserver-sa
+  replicas: 1
+  selector:
+    matchLabels:
+      app: control-label
+  template:
+    metadata:
+      labels:
+        app: control-label
+    spec:
+      containers:
+        - name: control-ubuntu
+          image: ryann3/control-ubuntu:5.0
+          imagePullPolicy: Always
+          ports:
+            - name: nginx-port
+              containerPort: 80
+            - name: ssh-port
+              containerPort: 22
+            - name: server-port
+              containerPort: 8003
+            - name: webssh-port
+              containerPort: 8886
+          resources: {}
+      serviceAccountName: access-to-apiserver-sa
 ---
 apiVersion: v1
 kind: Service
