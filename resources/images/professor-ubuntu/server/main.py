@@ -41,14 +41,14 @@ def create_directories(assignment_id, lecture_id, data_users_assigned):
         encoded_dir_path_student = base64.b64encode((
             f"{dir_path_student}/{assignment_id}").encode('ascii')).decode('ascii')  # base64 encode
         urlmodel = json.loads(requests.get(
-            f"{Urls.base_url}/users/{user['id']}/{lecture_id}/url").text)
+            f"{Urls.base_url}/users/{user['userId']}/{lecture_id}/url").text)
         url = f"{urlmodel['apiEndpoint']}/mkdir/{encoded_dir_path_student}"
         result = requests.post(url).text
         if result == False:
-            print(f"Error in mkdir, uid:{user['id']}")
+            print(f"Error in mkdir, uid:{user['userId']}")
 
         # mkdir in professor
-        os.makedirs(f"{dir_path_professor}/{assignment_id}/{user['id']}")
+        os.makedirs(f"{dir_path_professor}/{assignment_id}/{user['userId']}")
 
 
 @app.post("/assignments/")

@@ -22,7 +22,7 @@ for user in data_users_assigned:
     encoded_dir_path_student = base64.b64encode((
         f"{dir_path_student}/{assignment_id}").encode('ascii')).decode('ascii')  # base64 encode
     urlmodel = json.loads(requests.get(
-        f"{Urls.base_url}/users/{user['id']}/{lecture_id}/url").text)
+        f"{Urls.base_url}/users/{user['userId']}/{lecture_id}/url").text)
     url = f"{urlmodel['apiEndpoint']}/files/{encoded_dir_path_student}"
     json_str = requests.get(url).text
     # json to dict
@@ -30,7 +30,7 @@ for user in data_users_assigned:
 
     # write files
     for filename, content in result.items():
-        assignment_dir_path = f"{dir_path}/{assignment_id}/{user['id']}/{filename}"
+        assignment_dir_path = f"{dir_path}/{assignment_id}/{user['userId']}/{filename}"
         f = open(assignment_dir_path, 'w')
         f.write(content)
         f.close()
