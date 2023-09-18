@@ -35,7 +35,7 @@ class AssignmentModel(BaseModel):
     start_date: List[int]
     due_date: List[int]
     description: Optional[str]
-    answer: str
+    answer: List[str]
     runtime: float
 
 
