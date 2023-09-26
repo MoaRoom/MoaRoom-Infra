@@ -27,19 +27,19 @@ app.add_middleware(
 )
 
 
-def schedule_cronjob(dt, assignment_id, lecture_id):
+def schedule_cronjob(dt, assignment_id, lecture_id, assignment_path):
     month, day, hour, minute = dt[1], dt[2], dt[3], dt[4]
     os.system(
-        f"/bin/bash {os.path.dirname(os.path.realpath(__file__))}/cronjob.sh {minute} {hour} {day} {month} {assignment_id} {lecture_id}")
+        f"/bin/bash {os.path.dirname(os.path.realpath(__file__))}/cronjob.sh {minute} {hour} {day} {month} {assignment_id} {lecture_id} {assignment_path}")
 
 
-def create_directories(assignment_id, lecture_id, data_users_assigned):
+def create_directories(assignment_id, assignment_path, lecture_id, data_users_assigned):
     dir_path_student = Urls.dir_path_student
     dir_path_professor = Urls.dir_path_professor
     for user in data_users_assigned:
         # mkdir in student
         encoded_dir_path_student = base64.b64encode((
-            f"{dir_path_student}/{assignment_id}").encode('ascii')).decode('ascii')  # base64 encode
+            f"{dir_path_student}/{assignment_path}").encode('ascii')).decode('ascii')  # base64 encode
         urlmodel = json.loads(requests.get(
             f"{Urls.base_url}/users/{user['userId']}/{lecture_id}/url").text)
         url = f"{urlmodel['apiEndpoint']}/mkdir/{encoded_dir_path_student}"
@@ -54,17 +54,21 @@ def create_directories(assignment_id, lecture_id, data_users_assigned):
 @app.post("/assignments/")
 async def create_assignment(assignment_info: Dto.AssignmentModel = None):
     assignment_id = assignment_info.assignment_id
+    assignment_title = assignment_info.title
     lecture_id = assignment_info.lecture_id
+
+    assignment_path = f"{assignment_title}-{assignment_id}"
     json_str = requests.get(
         f"{Urls.base_url}/assignments/{assignment_id}/urls").text
     data_users_assigned = list(json.loads(json_str))
     due_date = assignment_info.due_date
 
     # mkdir
-    create_directories(assignment_id, lecture_id, data_users_assigned)
+    create_directories(assignment_id, assignment_path,
+                       lecture_id, data_users_assigned)
 
     # cron
-    schedule_cronjob(due_date, assignment_id, lecture_id)
+    schedule_cronjob(due_date, assignment_id, lecture_id, assignment_path)
 
     return True
 
