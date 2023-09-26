@@ -5,10 +5,13 @@ while read line || [ -n "$line" ] ; do
   echo "export $line > /dev/null 2>&1" >> /etc/profile 
   ((i+=1))
 done < ./.env
-source /etc/profile > /dev/null 2>&1
 
-# no welcome message
-chmod -x /etc/update-motd.d/*
+# MoaRoom CLI 
+alias moaroom="/root/workdir/moaroom.sh"
+echo "alias moaroom=\"/root/workdir/moaroom.sh\"" >> /etc/profile
+
+# source env variables
+source /etc/profile > /dev/null 2>&1
 
 # # ssl configuration
 # mkdir -p /etc/nginx/ssl
@@ -25,6 +28,9 @@ echo "root:${SSH_PASSWORD}" | chpasswd
 
 mkdir -p /run/nginx
 echo "<h1>THIS NGINX INDEX.HTML</h1>" >> /var/www/html/index.html
+
+# no welcome message
+chmod -x /etc/update-motd.d/*
 
 # Banner
 cp /root/workdir/motd /etc/issue.net # 원격 접속 시도 시

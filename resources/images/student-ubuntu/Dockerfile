@@ -19,7 +19,7 @@ RUN apt-get dist-upgrade
 
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu vivid main restricted universe" >> /etc/apt/sources.list # libffi-dev
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc tzdata
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc tzdata tree shc
 
 ## TZ
 ENV TZ=Asia/Seoul
@@ -64,8 +64,9 @@ RUN pip3 install -r ./server/requirements.txt
 
 EXPOSE 8001-8886
 
-## run ssh connection and nginx with startup.sh
+## change permissions of executable files
 RUN chmod +x /root/workdir/startup.sh
+RUN chmod +x /root/workdir/moaroom.sh
 RUN chmod +x /root/workdir/webssh/run.py
 RUN chmod +x /root/workdir/server/main.py
 CMD ["./startup.sh"]
@@ -82,3 +83,4 @@ CMD ["./startup.sh"]
 ### 4.2: added timezone
 ## 5.0: Deploy version
 ## 6.0: NodePort version
+## 7.0: moaroom cli version
