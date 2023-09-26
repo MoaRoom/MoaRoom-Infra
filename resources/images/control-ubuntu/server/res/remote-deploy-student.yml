@@ -20,6 +20,12 @@ spec:
         - name: server-port
           containerPort: 8001
       resources: {}
+  # volumes:
+  #   - name: efs-vol
+  #     nfs:
+  #       server: fs-0de4451c29d646d18.efs.ap-northeast-2.amazonaws.com
+  #       path: /{{ ID }}
+  #       readOnly: false
 ---
 apiVersion: v1
 kind: Service
