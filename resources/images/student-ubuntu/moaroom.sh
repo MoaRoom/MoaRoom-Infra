@@ -38,29 +38,42 @@ usage() {
 }
 
 show_guide() {
-  echo "MoaRoom Guide: How to use MoaRoom!"
-  echo "1. Go to a specific assignment directory by using the cli command"
-  echo "    You can use moaroom -h | --help to see how to use it"
+    echo "========================================================================"
+    echo "                   MoaRoom Guide: How to use MoaRoom!"
+    echo "========================================================================"
+    echo "1. Go to a specific assignment directory by using the cli command"
+    echo "    You can use moaroom -h | --help to see how to use it"
+    echo "========================================================================"
 
 }
 list_assignments(){
-    lines=$((`ls -l assignment/ | wc -l`-1))
+    echo "========================================================================"
+    echo "          These are the assignments in this container(lecture)"
+    echo "========================================================================"
+    lines=$((`ls -l ${DIR_PATH_STUDENT} | wc -l`-1))
     for ((l=1 ; l <= $((lines)) ; l++));
         do
-        directory=`ls -l assignment/ | awk 'NR=='"$((l+1))"' {print $9}'`
+        directory=`ls -l ${DIR_PATH_STUDENT} | awk 'NR=='"$((l+1))"' {print $9}'`
         echo "$l. $directory"
         done
-    echo ""
+    echo "========================================================================"
     echo "Remember the number and get the cmd line with -m | --to-assignment option"
 }
 tree_assignments(){
+    echo "========================================================================"
+    echo "          These are the assignments in this container(lecture)"
+    echo "========================================================================"
+    echo ""
     tree "${DIR_PATH_STUDENT}"
+    echo "========================================================================"
 }
 to_assignment(){
-    directory=`ls -l assignment/ | awk 'NR=='"$((TARGET_ASSIGNMENT+1))"' {print $9}'`
-    echo "Run this on terminal"
-    echo "cd \"${DIR_PATH_STUDENT}/${directory}\""
-    
+    directory=`ls -l ${DIR_PATH_STUDENT} | awk 'NR=='"$((TARGET_ASSIGNMENT+1))"' {print $9}'`
+    echo "========================================================================"
+    echo "                          Run this on terminal"
+    echo "========================================================================"
+    echo "> cd \"${DIR_PATH_STUDENT}/${directory}\""
+    echo "========================================================================"
 }
 
 while [ $# -gt 0 ]; do
