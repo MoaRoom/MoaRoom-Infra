@@ -41,8 +41,9 @@ async def read_files_from_dir(dir_path: str = None):
     returnDict = {}
     file_list = os.listdir(decoded_dir_path)
     for file in file_list:
-        f = open(f"{decoded_dir_path}/{file}", "r")
-        content = f.read()
-        returnDict[file] = content
-        f.close()
+        if file.split('.')[-1] in {"py", "c", "cpp"}:
+            f = open(f"{decoded_dir_path}/{file}", "r")
+            content = f.read()
+            returnDict[file] = content
+            f.close()
     return json.dumps(returnDict)

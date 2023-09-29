@@ -89,13 +89,13 @@ async def get_assignment(id: str, assignment_id: str):
         # Complie differs by extension
         if file_path.split(".")[-1] == "py":
             os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_python.sh {file_path}")
+                f"/bin/bash {curr_path}/getValueAndTime_python.sh {file_path} {dir_path}")
         elif file_path.split(".")[-1] == "c":
             os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_c.sh {file_path}")
+                f"/bin/bash {curr_path}/getValueAndTime_c.sh {file_path} {dir_path}")
         elif file_path.split(".")[-1] == "cpp":
             os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_cpp.sh {file_path}")
+                f"/bin/bash {curr_path}/getValueAndTime_cpp.sh {file_path} {dir_path}")
         else:
             print("지원되지 않는 파일 형식입니다.")
         f = open(f"{curr_path}/values.txt", "r")
