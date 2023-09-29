@@ -98,11 +98,11 @@ async def get_assignment(id: str, assignment_id: str):
                 f"/bin/bash {curr_path}/getValueAndTime_cpp.sh {file_path} {dir_path}")
         else:
             print("지원되지 않는 파일 형식입니다.")
-        f = open(f"{curr_path}/values.txt", "r")
+        f = open(f"{dir_path}/values.txt", "r")
         values = f.read()
         return_dict["answer"] = values
         f.close()
-        f = open(f"{curr_path}/time.txt", "r")
+        f = open(f"{dir_path}/time.txt", "r")
         time = f.read()
         return_dict["runtime"] = time
         f.close()
