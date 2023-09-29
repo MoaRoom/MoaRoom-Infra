@@ -44,7 +44,7 @@ show_guide() {
     echo "1. Go to a specific assignment directory by using the cli command"
     echo "    You can use moaroom -h | --help to see how to use it"
     echo "========================================================================"
-
+    echo ""
 }
 list_assignments(){
     echo "========================================================================"
@@ -58,6 +58,7 @@ list_assignments(){
         done
     echo "========================================================================"
     echo "Remember the number and get the cmd line with -m | --to-assignment option"
+    echo ""
 }
 tree_assignments(){
     echo "========================================================================"
@@ -66,6 +67,7 @@ tree_assignments(){
     echo ""
     tree "${DIR_PATH_STUDENT}"
     echo "========================================================================"
+    echo ""
 }
 to_assignment(){
     directory=`ls -l ${DIR_PATH_STUDENT} | awk 'NR=='"$((TARGET_ASSIGNMENT+1))"' {print $9}'`
@@ -74,6 +76,7 @@ to_assignment(){
     echo "========================================================================"
     echo "> cd \"${DIR_PATH_STUDENT}/${directory}\""
     echo "========================================================================"
+    echo ""
 }
 
 while [ $# -gt 0 ]; do
