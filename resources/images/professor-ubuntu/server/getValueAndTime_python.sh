@@ -7,5 +7,6 @@ start=`date +%s.%N`
 finish=`date +%s.%N`
 
 
-diff=$( echo "$finish - $start" | bc -l )
-/usr/bin/echo $diff > $2/time.txt
+# diff=$( echo "$finish - $start" | bc -l )
+# /usr/bin/echo $diff > $2/time.txt
+/usr/bin/echo "" > $2/time.txt
