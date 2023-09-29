@@ -81,30 +81,31 @@ async def get_assignment(id: str, assignment_id: str):
     file_list = os.listdir(dir_path)
     return_dict = {}
     for file in file_list:
-        file_path = f"{dir_path}/{file}"
-        f = open(file_path, "r")
-        content = f.read()
-        return_dict["content"] = content
-        f.close()
-        # Complie differs by extension
-        if file_path.split(".")[-1] == "py":
-            os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_python.sh {file_path} {dir_path}")
-        elif file_path.split(".")[-1] == "c":
-            os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_c.sh {file_path} {dir_path}")
-        elif file_path.split(".")[-1] == "cpp":
-            os.system(
-                f"/bin/bash {curr_path}/getValueAndTime_cpp.sh {file_path} {dir_path}")
-        else:
-            print("지원되지 않는 파일 형식입니다.")
-        f = open(f"{dir_path}/values.txt", "r")
-        values = f.read()
-        return_dict["answer"] = values
-        f.close()
-        f = open(f"{dir_path}/time.txt", "r")
-        time = f.read()
-        return_dict["runtime"] = time
-        f.close()
+        if file.split('.')[-1] in {"py", "c", "cpp"}:
+            file_path = f"{dir_path}/{file}"
+            f = open(file_path, "r")
+            content = f.read()
+            return_dict["content"] = content
+            f.close()
+            # Compile differs by extension
+            if file_path.split(".")[-1] == "py":
+                os.system(
+                    f"/bin/bash {curr_path}/getValueAndTime_python.sh {file_path} {dir_path}")
+            elif file_path.split(".")[-1] == "c":
+                os.system(
+                    f"/bin/bash {curr_path}/getValueAndTime_c.sh {file_path} {dir_path}")
+            elif file_path.split(".")[-1] == "cpp":
+                os.system(
+                    f"/bin/bash {curr_path}/getValueAndTime_cpp.sh {file_path} {dir_path}")
+            else:
+                print("지원되지 않는 파일 형식입니다.")
+            f = open(f"{dir_path}/values.txt", "r")
+            values = f.read()
+            return_dict["answer"] = values
+            f.close()
+            f = open(f"{dir_path}/time.txt", "r")
+            time = f.read()
+            return_dict["runtime"] = time
+            f.close()
 
     return json.dumps(return_dict)
