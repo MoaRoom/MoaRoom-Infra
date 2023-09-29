@@ -18,7 +18,7 @@ RUN apt-get autoclean
 RUN apt-get dist-upgrade
 
 RUN echo "deb http://archive.ubuntu.com/ubuntu vivid main restricted universe" >> /etc/apt/sources.list # libffi-dev
-RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc cron tzdata
+RUN apt-get install -y ssh openssh-server sudo curl vim git openssh-client telnet net-tools nginx python3.8 python3-pip libc-dev libffi-dev gcc g++ cron tzdata
 
 ## TZ
 ENV TZ=Asia/Seoul
